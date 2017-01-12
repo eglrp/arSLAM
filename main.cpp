@@ -4,7 +4,9 @@
 #include <memory>
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/videoio.hpp>
 #include <opencv2/aruco.hpp>
+
 //
 #include <opencv2/opencv_modules.hpp>
 
@@ -36,6 +38,7 @@ int main() {
     cv::Ptr<cv::aruco::Dictionary> dic_ptr(cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100));
 
 
+    cv::vi
 
 
 
@@ -91,10 +94,16 @@ int main() {
  */
 
 
+//    cap.set(CV_)
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT,720);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH,1280);
+    cap.set(CV_CAP_OPENNI_QVGA_60HZ,0.0);
+
 
     while (cap.isOpened()) {
 
         cap >> in_img;
+        std::cout << "rows:"<<in_img.rows<<"  cols: "<<in_img.cols  << std::endl;
         out_img_ptr = &in_img;
         std::vector<std::vector<cv::Point2f>> corner;
         std::vector<int> ids;
