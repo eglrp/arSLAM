@@ -20,8 +20,8 @@ include_directories(
         /usr/local/cuda/include
         /usr/include
         /usr/local/include
-
 )
+
 
 link_directories(
         /usr/local/lib
