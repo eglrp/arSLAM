@@ -20,6 +20,10 @@ int main() {
 
 
     cv::VideoCapture cap("/dev/video0");
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT,720);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH,1280);
+    cap.set(CV_CAP_OPENNI_QVGA_60HZ,60.0);
+
     cv::Mat in_img;
     cv::Mat *out_img_ptr;
     std::string win_name("debug");
@@ -36,6 +40,8 @@ int main() {
 
     cv::aruco::Dictionary dic = (cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100));
     cv::Ptr<cv::aruco::Dictionary> dic_ptr(cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100));
+    cv::Ptr<cv::aruco::DetectorParameters> detectorParameters_ptr(cv::aruco::DetectorParameters::create());
+    detectorParameters_ptr->adaptiveThreshConstant=1.0;
 
 
     cv::VideoWriter vr;
@@ -96,9 +102,8 @@ int main() {
 
 
 //    cap.set(CV_)
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT,720);
-    cap.set(CV_CAP_PROP_FRAME_WIDTH,1280);
-    cap.set(CV_CAP_OPENNI_QVGA_60HZ,60.0);
+
+
 
 
     while (cap.isOpened()) {
@@ -113,7 +118,7 @@ int main() {
         std::vector<int> ids;
 
 
-        cv::aruco::detectMarkers(in_img, dic_ptr, corner, ids);
+        cv::aruco::detectMarkers(in_img, dic_ptr, corner, ids,detectorParameters_ptr);
 
         if (ids.size() > 0) {
 
