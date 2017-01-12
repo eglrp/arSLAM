@@ -120,10 +120,13 @@ int main() {
 
                 for (int i(0); i < rvecs.size(); ++i) {
                     //201 mm
+                    if(ids[i] == 11)
                     std::cout << rvecs[i] << "   " << tvecs[i] << std::endl;
+
 
                     cv::aruco::drawAxis(*out_img_ptr,intrinsic_matrix,distortion_matrix,
                                         rvecs[i],tvecs[i],100.1);
+
                 }
             }catch(cv::Exception a)
             {
