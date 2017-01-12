@@ -29,5 +29,5 @@ link_directories(
 )
 
 add_executable(main main.cpp)
-target_link_libraries(main ${OpenCV_LIBRARIES})
+target_link_libraries(main ${OpenCV_LIBS})
 

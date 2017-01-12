@@ -30,7 +30,7 @@ public:
             cv::aruco::drawDetectedMarkers(*res,corners,ids);
 
 
-            cv::aruco::estimatePoseSingleMarkers()
+//            cv::aruco::estimatePoseSingleMarkers()
 
         }
         return ids.size();
