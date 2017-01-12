@@ -5,6 +5,10 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
+//
+//#include <opencv2/viz.hpp>
+
+
 
 
 #include <Eigen/Dense>
@@ -19,56 +23,70 @@ int main() {
     cv::Mat in_img;
     cv::Mat *out_img_ptr;
     std::string win_name("debug");
+    std::string threed_name("3ddebug");
+
+    cv::namedWindow(const_cast<char*>(threed_name.c_str()));
 
     cv::namedWindow(const_cast<char *> (win_name.c_str()));
 
     cv::waitKey(10);
 
+//    viz::Viz
 
     cv::aruco::Dictionary dic = (cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100));
     cv::Ptr<cv::aruco::Dictionary> dic_ptr(cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100));
 
-
+/**
+ * Read data to set intrinsc_matrix and distortion matrix.
+ */
     cv::Mat intrinsic_matrix(3,3,CV_32F);
     cv::Mat distortion_matrix(1,5,CV_32F);
-//    distortion_matrix.resize(5);
+
+    uchar * dp = distortion_matrix.data;
+    float *ddp ;
+    ddp = (float *)dp;
+
+
+    uchar *di = intrinsic_matrix.data;
+    float *ddi;
+    ddi = (float *)di;
+
+
 
     std::fstream tfs("./data/distortion_matrix.txt");
     for (int k(0); k < 5; ++k) {
         double ttt;
         tfs >> ttt;
-//        distortion_matrix.push_back(ttt);
-        distortion_matrix.at<double>(0,k) = ttt;
-//        std::cout << distortion_matrix << std::endl;
+
+        std::cout << "tttt:" << ttt << std::endl;
+        ddp[k] = ttt;
+
+
 
     }
+    std::cout << distortion_matrix << std::endl;
 
 //
     std::fstream ifs;
     ifs.open("./data/intrinsic_matrix.txt");
     std::cout << "isf:" << ifs.is_open() << std::endl;
     for (int ii(0); ii < 3; ++ii) {
-        for (int j(0); j < 3; ++j) {
+        for (int jj(0); jj < 3; ++jj) {
             double d_tmp(0.0);
             ifs >> d_tmp;
-//            intrinsic_matrix.push_back(d_tmp);
-            intrinsic_matrix.at<double>(ii,j) = d_tmp;
+            std::cout << d_tmp << "kkkk" << std::endl;
+
+            ddi[ii*3+jj] = d_tmp;
         }
     }
 
 
+    std::cout << "-----------------" << std::endl;
+    std::cout << intrinsic_matrix << std::endl;
 
-//    for (int x(0); x < intrinsic_matrix.rows; ++x) {
-//        for (int y(0); y < intrinsic_matrix.cols; ++y) {
-//            std::cout << intrinsic_matrix.at<double>(x, y) << std::endl;
-//        }
-//    }
-
-
-
-
-//    dic_ptr = &dic;
-//    std::shared_ptr<cv::aruco::Dictionary> dic_ptr(dic);
+    /*
+     * End read matrix.
+     */
 
 
 
