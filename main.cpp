@@ -38,7 +38,8 @@ int main() {
     cv::Ptr<cv::aruco::Dictionary> dic_ptr(cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100));
 
 
-    cv::vi
+    cv::VideoWriter vr;
+    vr.open("tmp.avi",4,30,cv::Size(1280,720),true);
 
 
 
@@ -97,12 +98,15 @@ int main() {
 //    cap.set(CV_)
     cap.set(CV_CAP_PROP_FRAME_HEIGHT,720);
     cap.set(CV_CAP_PROP_FRAME_WIDTH,1280);
-    cap.set(CV_CAP_OPENNI_QVGA_60HZ,0.0);
+    cap.set(CV_CAP_OPENNI_QVGA_60HZ,60.0);
 
 
     while (cap.isOpened()) {
 
         cap >> in_img;
+
+        vr << in_img;
+
         std::cout << "rows:"<<in_img.rows<<"  cols: "<<in_img.cols  << std::endl;
         out_img_ptr = &in_img;
         std::vector<std::vector<cv::Point2f>> corner;
@@ -150,8 +154,10 @@ int main() {
 //        out_img = in_img;
 
         cv::imshow(win_name, in_img);
-        cvWaitKey(10);
+        cv::waitKey(10);
+
     }
+
 
 
     return 0;
