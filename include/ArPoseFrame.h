@@ -141,6 +141,8 @@ protected:
     double real_length_ = 0.201;
     double draw_length_ = 0.3;
 
+    Eigen::Vector3d current_pos_= Eigen::Vector3d(0,0,0);
+
 
 private:
 
@@ -205,7 +207,7 @@ void ArPoseFrame::BuildTransform() {
             Eigen::Vector3d pose(0,0,0);
             pose = s->second * ids_pair[id_list[i]] * tmp_pose;
             std::cout <<"Pose:" <<  pose.transpose() << std::endl;
-
+            current_pos_ = pose;
 
             break;
 
@@ -260,6 +262,12 @@ void ArPoseFrame::ProcessImg(cv::Mat in) {
 
 
     }
+
+//    cv::addText(in,"pose"+current_pos_,cv::Point2f(100,100),"")
+    std::stringstream ss;
+    ss << current_pos_;
+
+    cv::putText(in,ss.str(),cv::Point2f(100,100),CV_FONT_NORMAL,1,cv::Scalar(20,200,20));
     cv::imshow("ArPoseFrame", in);
 //        cv::waitKey(10);
 
