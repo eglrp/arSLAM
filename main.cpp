@@ -14,6 +14,21 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+Eigen::Quaterniond angle2Quan(double x,double y,double z)
+{
+    double qx,qy,qz,qw;
+
+    double sx(sin(x/2.0)),sy(sin(y/2.0)),sz(sin(z/2.0));
+    double cx(cos(x/2.0)),cy(cos(y/2.0)),cz(cos(z/2.0));
+
+    qx = sy*sz*cx+cy*cz*sx;
+    qy = sy*cz*cx+cy*sz*sx;
+    qz = cy*sz*cx-sy*cz*sx;
+    qw = cy*cz*cx-sy*sz*sx;
+
+    return Eigen::Quaterniond(qw,qx,qy,qz);
+}
+
 
 int main() {
     std::cout.precision(20);
@@ -139,31 +154,67 @@ int main() {
                 for (int i(0); i < ids.size(); ++i) {
                     if (ids[i] == 11) {
                         i11 = i;
+//                        std::cout<< "FIND 11"<<std::endl;
                     }
                     if (ids[i] == 10) {
                         i10 = i;
+//                        std::cout << "FIND 10" << std::endl;
                     }
                 }
-                if (i11 > 0 & i10 > 0) {
+//                printf("i10:%d,i11:%d",i10,i11);
+                if ((i11 >= 0) && (i10 >= 0)  ) {
+                    std::cout << "in" << std::endl;
+
+                    Eigen::Affine3d t10,t11;
 //                   Eigen::AngleAxisd r_10(),r_11;
+                    Eigen::Quaterniond q10,q11;
+                    q10 = angle2Quan(rvecs[i10](0),rvecs[i10](1),rvecs[i10](2));
+                    q11 = angle2Quan(rvecs[i11](0),rvecs[i11](1),rvecs[i11](2));
+
+
+                    q10.normalize();
+                    q11.normalize();
+
+                    t10.rotate(q10);
+                    t11.rotate(q11);
+
+                    t10.pretranslate(Eigen::Vector3d(tvecs[i10](0),tvecs[i10](1),tvecs[i10](2)));
+                    t11.pretranslate(Eigen::Vector3d(tvecs[i11](0),tvecs[i11](1),tvecs[i11](2)));
+
+                    Eigen::Vector3d src(0,0,0);
+
+                    Eigen::Vector3d target(0,0,0);
+
+                    target = t10 * src;
+                    std::cout << t10.matrix() << std::endl;
+                    std::cout << t11.matrix() << std::endl;
+
+                    std::cout << "in - target :" << target.transpose() << std::endl;
+                    target = t11.inverse() * target;
+
+
+                    std::cout << "target:" << target.transpose() << std::endl;
+
+
                 }
 
 
                 for (int i(0); i < rvecs.size(); ++i) {
                     //201 mm
-                    if (ids[i] == 11)
-                    {
-                        double sintheta(0.0);
-                        for(int z(0);z<rvecs[i].rows;++z)
-                        {
-                            std::cout << rvecs[i](z)*180.0/M_PI << "  ";
-                            sintheta += rvecs[i](z)*rvecs[i](z);
-                        }
-                        double omega(std::sqrt(1-sintheta));
-                        std::cout << "omega:"<<omega << std::endl;
+//                    if (ids[i] == 11)
+//                    {
+//                        double sintheta(0.0);
+//                        for(int z(0);z<rvecs[i].rows;++z)
+//                        {
+//                            std::cout << rvecs[i](z)*180.0/M_PI << "  ";
+//                            sintheta += rvecs[i](z)*rvecs[i](z);
+//                        }
+//                        std::cout << rvecs[i] << std::endl;
+//                        double omega(std::sqrt(1-sintheta));
+//                        std::cout << "omega:"<<omega << std::endl;
 //                        rvecs[i].
-                        std::cout << std::endl;
-                    }
+//                        std::cout << std::endl;
+//                    }
 
 //                        std::cout << rvecs[i] << "   " << tvecs[i] << std::endl;
 
