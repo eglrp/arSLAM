@@ -9,6 +9,8 @@
 
 //
 #include <opencv2/opencv_modules.hpp>
+#include <opencv2/stereo.hpp>
+#include <opencv2/calib3d.hpp>
 
 
 #include <Eigen/Core>
@@ -165,39 +167,76 @@ int main() {
                 if ((i11 >= 0) && (i10 >= 0)  ) {
                     std::cout << "in" << std::endl;
 
+
+                    cv::Mat tmpr10,tmpr11;
+
+                    cv::Rodrigues(rvecs[i10],tmpr10);
+                    cv::Rodrigues(rvecs[i11],tmpr11);
+
+                    Eigen::Matrix3d ro10,ro11;
+
+
+                    for(int xx(0);xx<3;++xx)
+                    {
+                        for(int yy(0);yy<3;++yy)
+                        {
+                            ro10(xx,yy) = tmpr10.at<double>(xx,yy);
+                            ro11(xx,yy) = tmpr11.at<double>(xx,yy);
+
+
+                        }
+                    }
+                    std::cout << ro10 << std::endl;
+                    std::cout << ro11 << std::endl;
+
+
                     Eigen::Affine3d t10,t11;
-//                   Eigen::AngleAxisd r_10(),r_11;
-                    Eigen::Quaterniond q10,q11;
-                    q10 = angle2Quan(rvecs[i10](0),rvecs[i10](1),rvecs[i10](2));
-                    q11 = angle2Quan(rvecs[i11](0),rvecs[i11](1),rvecs[i11](2));
 
                     t10.Identity();
                     t11.Identity();
+//
+//
+//                    t10.rotate(ro10);
+//                    t11.rotate(ro11);
 
-                    q10.normalize();
-                    q11.normalize();
+                    for(int xx(0);xx<3;++xx)
+                    {
+                        for(int yy(0);yy<3;++yy)
+                        {
+                            t10(xx,yy) = ro10(xx,yy);
+                            t11(xx,yy) = ro11(xx,yy);
+                        }
+                    }
+                    for(int xx(0);xx < 3;++xx)
+                    {
+                        t10(xx,3) = tvecs[i10](xx);
+                        t11(xx,3) = tvecs[i11](xx);
+                    }
 
 
-
-                    t10.rotate(q10);
-                    t11.rotate(q11);
-
-                    t10.pretranslate(Eigen::Vector3d(tvecs[i10](0),tvecs[i10](1),tvecs[i10](2)));
-                    t11.pretranslate(Eigen::Vector3d(tvecs[i11](0),tvecs[i11](1),tvecs[i11](2)));
-
+                    std::cout << rvecs[i10] <<tvecs[i10] <<std::endl;
+                    std::cout << rvecs[i11] <<tvecs[i11] << std::endl;
+//                    t10.pretranslate(Eigen::Vector3d(tvecs[i10](0),tvecs[i10](1),tvecs[i10](2)));
+//                    t11.pretranslate(Eigen::Vector3d(tvecs[i11](0),tvecs[i11](1),tvecs[i11](2)));
+//
                     Eigen::Vector3d src(0,0,0);
 
                     Eigen::Vector3d target(0,0,0);
+
+
 
                     target = t10 * src;
                     std::cout << t10.matrix() << std::endl;
                     std::cout << t11.matrix() << std::endl;
 
                     std::cout << "in - target :" << target.transpose() << std::endl;
-                    target = t11 * target;
+                    target = t11.inverse() * target;
 
 
                     std::cout << "target:" << target.transpose() << std::endl;
+
+
+
 
 
                 }
