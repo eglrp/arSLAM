@@ -26,7 +26,7 @@ int main()
     parameters.create();
 
     cv::aruco::Dictionary dic = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100);
-    ArPoseFrame arPoseFrame(-1);
+    ArPoseFrame arPoseFrame(11);
     while(cap.isOpened())
     {
         cap >> in;

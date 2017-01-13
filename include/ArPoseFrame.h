@@ -85,6 +85,8 @@ public:
 
 
         initial_id_ = initial_id;
+        Eigen::Affine3d t3d = Eigen::Affine3d::Identity();
+        transform_map_.insert(std::make_pair(initial_id_,t3d));
 
         LoadCameraPara("./data/intrinsic_matrix.txt",
                        "./data/distortion_matrix.txt");
@@ -120,7 +122,8 @@ protected:
     void BuildTransform();
 
     std::mutex vecs_mutex_;
-    std::vector<cv::Vec3d> rvecs_, tvecs_,tids_;
+    std::vector<cv::Vec3d> rvecs_, tvecs_;
+    std::vector<int> tids_;
 
     int initial_id_;//the first one,set it's frame as global frame.
 
@@ -145,8 +148,69 @@ private:
 };
 
 void ArPoseFrame::BuildTransform() {
+
+    std::map<int,Eigen::Affine3d> ids_pair;
+    std::vector<int> id_list;
     while (1) {
-        cv::waitKey(10);
+        vecs_mutex_.lock();
+        if(tids_.size()>0)
+        {
+            ids_pair.clear();
+            id_list.clear();
+            for(int i(0);i<tids_.size();++i)
+            {
+                ids_pair.insert(std::make_pair(tids_[i],rt2Matrix(rvecs_[i],tvecs_[i])));
+                id_list.push_back(tids_[i]);
+            }
+        }
+        tids_.clear();
+        vecs_mutex_.unlock();
+
+        for(int i(0);i<id_list.size();++i)
+        {
+            //Updata transform_map_.
+            if(id_list[i] != initial_id_)
+            {
+                auto search = transform_map_.find(id_list[i]);
+                if(search == transform_map_.end())
+                {
+
+
+                    //try to build relationship between id_list[i] and initial_id_.
+
+                    for(int j(0);j<id_list.size();++j)
+                    {
+                        auto s = transform_map_.find(id_list[j]);
+                        if(s != transform_map_.end())
+                        {
+                            Eigen::Affine3d tmp;
+                            tmp = ids_pair[id_list[j]].inverse() * ids_pair[id_list[i]];
+
+                            tmp = transform_map_[id_list[j]] * tmp;
+                            transform_map_.insert(std::make_pair(id_list[i],tmp));
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        //Get Pose.
+        for(int i(0);i<id_list.size();++i)
+        {
+            Eigen::Vector3d tmp_pose(0,0,0);
+            auto s = transform_map_.find(id_list[i]);
+            Eigen::Vector3d pose(0,0,0);
+            pose = s->second * ids_pair[id_list[i]] * tmp_pose;
+            std::cout <<"Pose:" <<  pose.transpose() << std::endl;
+
+
+            break;
+
+        }
+
 
     }
 }
@@ -190,11 +254,10 @@ void ArPoseFrame::ProcessImg(cv::Mat in) {
 
             }
 
-
-
         } catch (cv::Exception &a) {
             std::cout << a.err << std::endl;
         }
+
         cv::imshow("ArPoseFrame", in);
 //        cv::waitKey(10);
 
