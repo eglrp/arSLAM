@@ -73,13 +73,17 @@ public:
      * @param dic
      * @param para
      */
-    ArPoseFrame(int initial_id = -1,
-                cv::aruco::Dictionary dic = cv::aruco::getPredefinedDictionary(cv::aruco::Dict_6x6_100),
-                cv::aruco::DetectorParameters para = cv::aruco::DetectorParameters::create())
+    ArPoseFrame(int initial_id)
             : intrinsic_matrix_(3, 3, CV_32F),
-              distortion_matrix_(1, 5, CV_32F),
-              dic_ptr_(dic),
-              para_ptr_(para) {
+              distortion_matrix_(1, 5, CV_32F) {
+
+        dic_ptr_ = new cv::aruco::Dictionary(
+                cv::aruco::getPredefinedDictionary(
+                        cv::aruco::DICT_6X6_100));
+
+
+
+
         initial_id_ = initial_id;
 
         LoadCameraPara("./data/intrinsic_matrix.txt",
@@ -87,7 +91,7 @@ public:
 
         cv::namedWindow("ArPoseFrame");
 
-        std::thread btf(&ArPoseFrame::BuildTransform,this);
+        std::thread btf(&ArPoseFrame::BuildTransform, this);
         btf.detach();
 
     }
@@ -116,14 +120,14 @@ protected:
     void BuildTransform();
 
     std::mutex vecs_mutex_;
-    std::vector<cv::Vec3d> rvecs_, tvecs_;
+    std::vector<cv::Vec3d> rvecs_, tvecs_,tids_;
 
     int initial_id_;//the first one,set it's frame as global frame.
 
     std::map<int, Eigen::Affine3d> transform_map_;//transform_map_ to first
 
     cv::Ptr<cv::aruco::Dictionary> dic_ptr_;
-    cv::Ptr<cv::aruco::DetectorParameters> para_ptr_;
+//    cv::Ptr<cv::aruco::DetectorParameters> para_ptr_;
 
     cv::Mat intrinsic_matrix_, distortion_matrix_;
 
@@ -131,13 +135,8 @@ protected:
     std::vector<int> ids_;
 
 
-
-
     double real_length_ = 0.201;
     double draw_length_ = 0.3;
-
-
-
 
 
 private:
@@ -146,10 +145,9 @@ private:
 };
 
 void ArPoseFrame::BuildTransform() {
-    while(1)
-    {
+    while (1) {
         cv::waitKey(10);
-        
+
     }
 }
 
@@ -158,49 +156,49 @@ void ArPoseFrame::ProcessImg(cv::Mat in) {
 
     corner_.clear();
     ids_.clear();
+//    std::cout << "IN ProcessImg" << std::endl;
 
 
-    cv::aruco::detectMarkers(in,dic_ptr_,corner_,ids_,
-    para_ptr_);
-    if(ids_.size()>0)
-    {
-        if(initial_id_ < 0)
-        {
-            initial_id_ = ids[0];
+    cv::aruco::detectMarkers(in, dic_ptr_, corner_, ids_);//,para_ptr_);
+    if (ids_.size() > 0) {
+        if (initial_id_ < 0) {
+            initial_id_ = ids_[0];
         }
 
         std::vector<cv::Vec3d> rvecs, tvecs;
 
 
-        try{
+        try {
             cv::aruco::estimatePoseSingleMarkers(corner_,
                                                  real_length_,
                                                  intrinsic_matrix_,
                                                  distortion_matrix_,
                                                  rvecs,
-                                                 tvecsv);
+                                                 tvecs);
 
+            //Deep copy?
             vecs_mutex_.lock();
             rvecs_ = rvecs;
             tvecs_ = tvecs;
+            tids_ = ids_;
             vecs_mutex_.unlock();
 
             for (int i(0); i < rvecs.size(); ++i) {
 
-                cv::aruco::drawAxis(in, intrinsic_matrix, distortion_matrix,
+                cv::aruco::drawAxis(in, intrinsic_matrix_, distortion_matrix_,
                                     rvecs[i], tvecs[i], draw_length_);
 
             }
 
-            cv::imshow("ArPoseFrame",in);
 
-        }catch(cv::Exception &a)
-        {
+
+        } catch (cv::Exception &a) {
             std::cout << a.err << std::endl;
         }
+        cv::imshow("ArPoseFrame", in);
+//        cv::waitKey(10);
 
-
-        return true;
+        return ;
     }
 
 
@@ -216,7 +214,7 @@ Eigen::Affine3d ArPoseFrame::rt2Matrix(cv::Vec3d rvec, cv::Vec3d tvec) {
 
     for (int i(0); i < 3; ++i) {
         for (int j(0); j < 3; ++j) {
-            rotation_matrix(i, j) = cv_rotation_matrix.at<double>(i, j);
+            transform_matrix(i, j) = cv_rotation_matrix.at<double>(i, j);
         }
     }
 
@@ -238,7 +236,7 @@ bool ArPoseFrame::LoadCameraPara(std::string intrinsic_matrix_file,
         if (!cf.is_open() && !df.is_open()) {
             std::cout << "Open camera parameters files error." << std::endl;
 
-            std::err << "Open camera parameters files error." << std::endl;
+            std::cerr << "Open camera parameters files error." << std::endl;
 
         }
 
@@ -262,7 +260,7 @@ bool ArPoseFrame::LoadCameraPara(std::string intrinsic_matrix_file,
             fp[i] = t;
         }
     } catch (std::exception &e) {
-        std::err << e.what() << std::endl;
+        std::cerr << e.what() << std::endl;
     }
     return true;
 

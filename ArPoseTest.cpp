@@ -21,10 +21,17 @@ int main()
     cap.set(CV_CAP_OPENNI_QVGA_60HZ, 60.0);
 
     cv::Mat in;
+
+    cv::aruco::DetectorParameters parameters;
+    parameters.create();
+
+    cv::aruco::Dictionary dic = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100);
+    ArPoseFrame arPoseFrame(-1);
     while(cap.isOpened())
     {
         cap >> in;
-        cv::imshow("test",in);
+//        cv::imshow("test",in);
+        arPoseFrame.ProcessImg(in);
         cv::waitKey(10);
     }
 
