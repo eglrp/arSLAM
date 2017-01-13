@@ -151,14 +151,19 @@ int main() {
 
                 for (int i(0); i < rvecs.size(); ++i) {
                     //201 mm
-//                    if (ids[i] == 11)
-//                    {
-//                        for(int z(0);z<rvecs[i].rows;++z)
-//                        {
-//                            std::cout << rvecs[i](z)*180.0/M_PI << "  ";
-//                        }
-//                        std::cout << std::endl;
-//                    }
+                    if (ids[i] == 11)
+                    {
+                        double sintheta(0.0);
+                        for(int z(0);z<rvecs[i].rows;++z)
+                        {
+                            std::cout << rvecs[i](z)*180.0/M_PI << "  ";
+                            sintheta += rvecs[i](z)*rvecs[i](z);
+                        }
+                        double omega(std::sqrt(1-sintheta));
+                        std::cout << "omega:"<<omega << std::endl;
+//                        rvecs[i].
+                        std::cout << std::endl;
+                    }
 
 //                        std::cout << rvecs[i] << "   " << tvecs[i] << std::endl;
 
