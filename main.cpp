@@ -11,7 +11,8 @@
 #include <opencv2/opencv_modules.hpp>
 
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 
 
 int main() {
@@ -20,9 +21,9 @@ int main() {
 
 
     cv::VideoCapture cap("/dev/video0");
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT,720);
-    cap.set(CV_CAP_PROP_FRAME_WIDTH,1280);
-    cap.set(CV_CAP_OPENNI_QVGA_60HZ,60.0);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
+    cap.set(CV_CAP_OPENNI_QVGA_60HZ, 60.0);
 
     cv::Mat in_img;
     cv::Mat *out_img_ptr;
@@ -41,11 +42,11 @@ int main() {
     cv::aruco::Dictionary dic = (cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100));
     cv::Ptr<cv::aruco::Dictionary> dic_ptr(cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100));
     cv::Ptr<cv::aruco::DetectorParameters> detectorParameters_ptr(cv::aruco::DetectorParameters::create());
-    detectorParameters_ptr->adaptiveThreshConstant=1.0;
+    detectorParameters_ptr->adaptiveThreshConstant = 1.0;
 
 
     cv::VideoWriter vr;
-    vr.open("tmp.avi",4,30,cv::Size(1280,720),true);
+    vr.open("tmp.avi", 4, 30, cv::Size(1280, 720), true);
 
 
 
@@ -95,10 +96,9 @@ int main() {
     std::cout << "-----------------" << std::endl;
     std::cout << intrinsic_matrix << std::endl;
 
-
     /*
- * End read matrix.
- */
+    * End read matrix.
+    */
 
 
 //    cap.set(CV_)
@@ -112,13 +112,13 @@ int main() {
 
         vr << in_img;
 
-        std::cout << "rows:"<<in_img.rows<<"  cols: "<<in_img.cols  << std::endl;
+//        std::cout << "rows:"<<in_img.rows<<"  cols: "<<in_img.cols  << std::endl;
         out_img_ptr = &in_img;
         std::vector<std::vector<cv::Point2f>> corner;
         std::vector<int> ids;
 
 
-        cv::aruco::detectMarkers(in_img, dic_ptr, corner, ids,detectorParameters_ptr);
+        cv::aruco::detectMarkers(in_img, dic_ptr, corner, ids, detectorParameters_ptr);
 
         if (ids.size() > 0) {
 
@@ -132,11 +132,35 @@ int main() {
                                                      distortion_matrix,
                                                      rvecs,
                                                      tvecs);
+                /**
+                * Test transform matrix.
+                */
+                int i10(-1), i11(-1);
+                for (int i(0); i < ids.size(); ++i) {
+                    if (ids[i] == 11) {
+                        i11 = i;
+                    }
+                    if (ids[i] == 10) {
+                        i10 = i;
+                    }
+                }
+                if (i11 > 0 & i10 > 0) {
+//                   Eigen::AngleAxisd r_10(),r_11;
+                }
+
 
                 for (int i(0); i < rvecs.size(); ++i) {
                     //201 mm
-                    if (ids[i] == 11)
-                        std::cout << rvecs[i] << "   " << tvecs[i] << std::endl;
+//                    if (ids[i] == 11)
+//                    {
+//                        for(int z(0);z<rvecs[i].rows;++z)
+//                        {
+//                            std::cout << rvecs[i](z)*180.0/M_PI << "  ";
+//                        }
+//                        std::cout << std::endl;
+//                    }
+
+//                        std::cout << rvecs[i] << "   " << tvecs[i] << std::endl;
 
 
                     cv::aruco::drawAxis(*out_img_ptr, intrinsic_matrix, distortion_matrix,
@@ -163,7 +187,6 @@ int main() {
         cv::waitKey(10);
 
     }
-
 
 
     return 0;

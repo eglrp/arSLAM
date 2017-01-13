@@ -12,10 +12,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3  -pthread -lopencv_aruco"
 find_package(Eigen3 REQUIRED)
 #find_package(OPENCV REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(VTK REQUIRED)
 
 include_directories(
         ${EIGEN3_INCLUDE_DIR}
         ${OpenCV_INCLUDE_DIRS}
+        ${VTK_USE_FILE}
         ./include
         /usr/local/cuda/include
         /usr/include
