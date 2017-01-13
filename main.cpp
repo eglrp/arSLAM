@@ -127,7 +127,7 @@ int main() {
 
         cap >> in_img;
 
-        vr << in_img;
+//        vr << in_img;
 
 //        std::cout << "rows:"<<in_img.rows<<"  cols: "<<in_img.cols  << std::endl;
         out_img_ptr = &in_img;
