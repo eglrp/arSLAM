@@ -142,7 +142,7 @@ int main() {
             std::vector<cv::Vec3d> rvecs, tvecs;
             try {
                 cv::aruco::estimatePoseSingleMarkers(corner,
-                                                     201,
+                                                     0.201,
                                                      intrinsic_matrix,
                                                      distortion_matrix,
                                                      rvecs,
@@ -171,9 +171,13 @@ int main() {
                     q10 = angle2Quan(rvecs[i10](0),rvecs[i10](1),rvecs[i10](2));
                     q11 = angle2Quan(rvecs[i11](0),rvecs[i11](1),rvecs[i11](2));
 
+                    t10.Identity();
+                    t11.Identity();
 
                     q10.normalize();
                     q11.normalize();
+
+
 
                     t10.rotate(q10);
                     t11.rotate(q11);
@@ -190,7 +194,7 @@ int main() {
                     std::cout << t11.matrix() << std::endl;
 
                     std::cout << "in - target :" << target.transpose() << std::endl;
-                    target = t11.inverse() * target;
+                    target = t11 * target;
 
 
                     std::cout << "target:" << target.transpose() << std::endl;
