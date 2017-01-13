@@ -146,6 +146,7 @@ int main() {
             } catch (cv::Exception a) {
                 std::cout << "error in estimate pose:" <<
                           a.err << std::endl;
+
             }
 
 //            std::cout << 1.2 << std::endl;
