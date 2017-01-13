@@ -62,8 +62,8 @@ int main() {
     detectorParameters_ptr->adaptiveThreshConstant = 1.0;
 
 
-    cv::VideoWriter vr;
-    vr.open("tmp.avi", 4, 30, cv::Size(1280, 720), true);
+//    cv::VideoWriter vr;
+//    vr.open("tmp.avi", 4, 30, cv::Size(1280, 720), true);
 
 
 
