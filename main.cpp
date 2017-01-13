@@ -223,8 +223,6 @@ int main() {
 
                     Eigen::Vector3d target(0,0,0);
 
-
-
                     target = t10 * src;
                     std::cout << t10.matrix() << std::endl;
                     std::cout << t11.matrix() << std::endl;
@@ -232,11 +230,7 @@ int main() {
                     std::cout << "in - target :" << target.transpose() << std::endl;
                     target = t11.inverse() * target;
 
-
                     std::cout << "target:" << target.transpose() << std::endl;
-
-
-
 
 
                 }
