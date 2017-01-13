@@ -224,7 +224,7 @@ int main() {
 
 
                     cv::aruco::drawAxis(*out_img_ptr, intrinsic_matrix, distortion_matrix,
-                                        rvecs[i], tvecs[i], 100.1);
+                                        rvecs[i], tvecs[i], 0.300);
 
                 }
             } catch (cv::Exception a) {
