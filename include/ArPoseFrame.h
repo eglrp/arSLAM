@@ -258,12 +258,12 @@ void ArPoseFrame::ProcessImg(cv::Mat in) {
             std::cout << a.err << std::endl;
         }
 
-        cv::imshow("ArPoseFrame", in);
+
+    }
+    cv::imshow("ArPoseFrame", in);
 //        cv::waitKey(10);
 
-        return ;
-    }
-
+    return ;
 
 }
 
