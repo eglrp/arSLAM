@@ -12,11 +12,15 @@
 #include <boost/thread/thread.hpp>
 
 
+#include <thread>
 #include "OwnViewer.h"
 int main()
 {
 
     OwnViewer viewer("Test windows");
+//    std::thread t(&OwnViewer::Start,&viewer);
+//    t.detach();
+    viewer.Start();
 
     Eigen::Affine3d t;
     t.setIdentity();

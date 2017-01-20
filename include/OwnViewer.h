@@ -16,7 +16,7 @@
 #include <boost/thread/thread.hpp>
 
 
-#include <thread>
+//#include <thread>
 #include <mutex>
 
 #include <Eigen/Core>
@@ -26,33 +26,44 @@ class OwnViewer{
 public:
     OwnViewer(std::string windows_name = "Own 3D Viewer"
     ):
-            viewer_ptr_ (new pcl::visualization::PCLVisualizer(windows_name))
+            viewer_ptr_(new pcl::visualization::PCLVisualizer(windows_name))
     {
-        std::cout << "first" << std::endl;
-        std::thread t1(&OwnViewer::Run,this);
-        std::cout << "second" << std::endl;
-        t1.detach();
-        std::cout << "third " << std::endl;
+//        *viewer_ptr_=pcl::visualization::PCLVisualizer(windows_name);
 
+    }
+
+
+    bool Start()
+    {
+        viewer_ptr_->addCoordinateSystem(1.0);
+        boost::thread t(&OwnViewer::Run,this);
+        t.detach();
+//        viewer_ptr_->spin();
+
+//        boost::thread
     }
 
 
     bool addMarker(Eigen::Affine3d m_t,int marker_id);
 
 
+    bool addCamera(Eigen::Vector3d srcp,
+    Eigen::Vector3d targetp);
 
-
-
-
-
-private:
 
     bool Run();
 
 
+    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_ptr_ ;//= new pcl::visualization::PCLVisualizer();
+
+private:
 
 
-    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_ptr_;
+
+
+
+
+
 
     std::mutex viewer_mutex_;
 
@@ -73,11 +84,14 @@ private:
 
 bool OwnViewer::Run()
 {
+//    viewer_ptr_->spin();
     while(is_run_)
     {
         viewer_mutex_.lock();
-        viewer_ptr_->spinOnce();
+        viewer_ptr_->spinOnce(1,true);
         viewer_mutex_.unlock();
+//        viewer_ptr_->spin();
+        std::cout << "run " << std::endl;
 
         boost::this_thread::sleep(boost::posix_time::microseconds(10000));
     }
@@ -87,14 +101,23 @@ bool OwnViewer::Run()
 
 
 bool OwnViewer::addMarker(Eigen::Affine3d m_t, int marker_id) {
-    viewer_mutex_.lock();
+//    viewer_mutex_.lock();
 //    viewer_ptr_->addCoordinateSystem(1.0,Eigen::Affine3f(m_t),marker_str_+std::to_string(marker_id),0);
     Eigen::Affine3f t(m_t);
     std::cout << " t :\n " << t.matrix() << std::endl;
 
 
     viewer_ptr_->addCoordinateSystem(1.0,t,0);
-    viewer_mutex_.unlock();
+//    viewer_mutex_.unlock();
 
+}
+
+
+bool OwnViewer::addCamera(Eigen::Vector3d srcp, Eigen::Vector3d targetp) {
+    viewer_ptr_->addArrow(pcl::PointXYZ(srcp(0),srcp(1),srcp(2)),
+    pcl::PointXYZ(targetp(0),targetp(1),targetp(2)),
+    200,0,200,
+    "camera"
+    );
 }
 #endif //ARSLAM_OWNVIEWER_H
