@@ -237,7 +237,7 @@ void ArPoseFrame::BuildTransform() {
 
 
             viewer.removeCoordinateSystem("camera");
-            viewer.addCoordinateSystem(0.10,Eigen::Affine3f(s->second.inverse()*ids_pair[id_list[i]].inverse()).inverse(),
+            viewer.addCoordinateSystem(0.10,Eigen::Affine3f(s->second*ids_pair[id_list[i]]).inverse(),
             "camera");
 
 
