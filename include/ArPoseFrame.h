@@ -169,6 +169,7 @@ void ArPoseFrame::BuildTransform() {
     std::map<int, Eigen::Affine3d> ids_pair;
     std::vector<int> id_list;
     pcl::visualization::PCLVisualizer viewer("test");
+    viewer.addCoordinateSystem(1.0);
     while (1) {
         vecs_mutex_.lock();
         if (tids_.size() > 0) {
@@ -203,7 +204,7 @@ void ArPoseFrame::BuildTransform() {
 
 //                            viewer_.addMarker(tmp,id_list[i]);
 
-                            viewer.addCoordinateSystem(1.0,Eigen::Affine3f(tmp),
+                            viewer.addCoordinateSystem(0.2,Eigen::Affine3f(tmp),
                                                        "id:"+std::to_string(id_list[i]));
 
 
@@ -223,19 +224,19 @@ void ArPoseFrame::BuildTransform() {
             auto s = transform_map_.find(id_list[i]);
             Eigen::Vector3d pose(0, 0, 0);
             pose = s->second * ids_pair[id_list[i]] * tmp_pose;
-            std::cout << "Pose:" << pose.transpose() << std::endl;
+//            std::cout << "Pose:" << pose.transpose() << std::endl;
             current_pos_ = pose;
 
 
 
             viewer.removeCoordinateSystem("camera");
-            viewer.addCoordinateSystem(2.0,Eigen::Affine3f(s->second*ids_pair[id_list[i]]),
+            viewer.addCoordinateSystem(0.10,Eigen::Affine3f(s->second*ids_pair[id_list[i]]),
             "camera");
 
             break;
 
         }
-
+        viewer.spinOnce(1);
 
     }
 }
