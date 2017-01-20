@@ -34,7 +34,7 @@ include_directories(
 link_directories(
         /usr/local/lib
         /usr/lib
-#        ${PCL_LIBRARY_DIRS}
+        ${PCL_LIBRARY_DIRS}
 )
 
 add_executable(main main.cpp)
