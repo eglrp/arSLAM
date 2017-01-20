@@ -169,8 +169,12 @@ void ArPoseFrame::BuildTransform() {
     std::map<int, Eigen::Affine3d> ids_pair;
     std::vector<int> id_list;
     pcl::visualization::PCLVisualizer viewer("test");
-    viewer.addCoordinateSystem(1.0);
-    while (1) {
+
+    viewer.setBackgroundColor(96,96,96);
+
+
+    viewer.addCoordinateSystem(0.3);
+    while (1){
         vecs_mutex_.lock();
         if (tids_.size() > 0) {
             ids_pair.clear();
@@ -200,11 +204,14 @@ void ArPoseFrame::BuildTransform() {
 
                             tmp = transform_map_[id_list[j]] * tmp;
 
+
+                            tmp = tmp.inverse();
+
                             transform_map_.insert(std::make_pair(id_list[i], tmp));
 
 //                            viewer_.addMarker(tmp,id_list[i]);
 
-                            viewer.addCoordinateSystem(0.2,Eigen::Affine3f(tmp),
+                            viewer.addCoordinateSystem(0.2,Eigen::Affine3f(tmp.inverse()),
                                                        "id:"+std::to_string(id_list[i]));
 
 
@@ -230,8 +237,13 @@ void ArPoseFrame::BuildTransform() {
 
 
             viewer.removeCoordinateSystem("camera");
-            viewer.addCoordinateSystem(0.10,Eigen::Affine3f(s->second*ids_pair[id_list[i]]),
+            viewer.addCoordinateSystem(0.10,Eigen::Affine3f(s->second.inverse()*ids_pair[id_list[i]].inverse()).inverse(),
             "camera");
+
+
+            viewer.removeShape("arrow");
+            viewer.addArrow(pcl::PointXYZ(pose(0),pose(1),pose(2)),
+            pcl::PointXYZ(0,0,0),200,20,20,"arrow");
 
             break;
 
