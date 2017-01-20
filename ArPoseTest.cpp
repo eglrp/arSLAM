@@ -16,10 +16,14 @@
 int main()
 {
     cv::VideoCapture cap("/dev/video0");
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
-    cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
-//    cap.set(CV_CAP_OPENNI_QVGA_60HZ, 60.0);
-    cap.set(CV_CAP_OPENNI_QVGA_30HZ,30);
+//    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+//    cap.cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH,1280);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT,720);
+//    cap.set(CV_CAP_PROP_FRAME_WIDTH, 1920);
+//    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 1080);
+    cap.set(CV_CAP_OPENNI_QVGA_60HZ, 60.0);
+//    cap.set(CV_CAP_OPENNI_QVGA_30HZ,30);
 
     cv::Mat in;
 

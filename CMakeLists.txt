@@ -13,7 +13,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3  -pthread -lopencv_aruco"
 find_package(Eigen3 REQUIRED)
 #find_package(OPENCV REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(PCL 1.7 REQUIRED)
+find_package(PCL  REQUIRED)
 #add_definitions(${PCL_DEFINITIONS})
 
 include_directories(
@@ -34,7 +34,7 @@ include_directories(
 link_directories(
         /usr/local/lib
         /usr/lib
-        ${PCL_LIBRARY_DIRS}
+#        ${PCL_LIBRARY_DIRS}
 )
 
 add_executable(main main.cpp)
