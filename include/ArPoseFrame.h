@@ -230,14 +230,15 @@ void ArPoseFrame::BuildTransform() {
             Eigen::Vector3d tmp_pose(0, 0, 0);
             auto s = transform_map_.find(id_list[i]);
             Eigen::Vector3d pose(0, 0, 0);
-            pose = s->second * ids_pair[id_list[i]] * tmp_pose;
+//            pose =  ids_pair[id_list[i]] * s->second * tmp_pose;
+            pose = s->second.inverse() * ids_pair[id_list[i]].inverse() * tmp_pose;
 //            std::cout << "Pose:" << pose.transpose() << std::endl;
             current_pos_ = pose;
 
 
 
             viewer.removeCoordinateSystem("camera");
-            viewer.addCoordinateSystem(0.10,Eigen::Affine3f(s->second*ids_pair[id_list[i]]).inverse(),
+            viewer.addCoordinateSystem(0.10,Eigen::Affine3f(ids_pair[id_list[i]]*s->second).inverse(),
             "camera");
 
 
