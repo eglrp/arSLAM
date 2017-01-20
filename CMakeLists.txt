@@ -25,6 +25,10 @@ include_directories(
         /usr/local/include
 )
 
+#aux_source_directory(
+#        ./src
+#)
+
 
 link_directories(
         /usr/local/lib
@@ -38,4 +42,8 @@ target_link_libraries(main ${OpenCV_LIBS})
 
 add_executable(ArPoseTest ArPoseTest.cpp)
 target_link_libraries(ArPoseTest ${OpenCV_LIBS})
+
+
+add_executable(VisualTest visualTest.cpp)
+target_link_libraries(VisualTest ${OpenCV_LIBS} ${PCL_LIBRARIES})
 

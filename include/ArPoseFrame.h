@@ -122,8 +122,8 @@ protected:
     void BuildTransform();
 
     std::mutex vecs_mutex_;
-    std::vector<cv::Vec3d> rvecs_, tvecs_;
-    std::vector<int> tids_;
+    std::vector<cv::Vec3d> rvecs_, tvecs_;// temp
+    std::vector<int> tids_;   // Id of saved markers.
 
     int initial_id_;//the first one,set it's frame as global frame.
 
