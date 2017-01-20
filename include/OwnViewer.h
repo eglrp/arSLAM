@@ -22,12 +22,20 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+
+pcl::visualization::PCLVisualizer vis;
 class OwnViewer{
 public:
     OwnViewer(std::string windows_name = "Own 3D Viewer"
     ):
-            viewer_ptr_(new pcl::visualization::PCLVisualizer(windows_name))
+
+            viewer_ptr_(new pcl::visualization::PCLVisualizer(""))
+//            viewer_(windows_name)
     {
+//        viewer_ = pcl::visualization::PCLVisualizer(windows_name);
+//        viewer_ptr_ = boost::shared_ptr<pcl::visualization::PCLVisualizer>(viewer_);
+//        vis = viewer_;
+//        *viewer_ptr_ = vis;
 //        *viewer_ptr_=pcl::visualization::PCLVisualizer(windows_name);
 
     }
@@ -54,7 +62,16 @@ public:
     bool Run();
 
 
+    void test()
+    {
+        viewer_ptr_->addText("aaa",100,100,"str1",0);
+        viewer_ptr_->addCoordinateSystem(20.0);
+    }
+
+
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer_ptr_ ;//= new pcl::visualization::PCLVisualizer();
+
+    pcl::visualization::PCLVisualizer viewer_;
 
 private:
 
@@ -85,19 +102,24 @@ private:
 bool OwnViewer::Run()
 {
 //    viewer_ptr_->spin();
+//    pcl::visualization::PCLVisualizer vis("tst");
+//    *viewer_ptr_ = vis;
+//    test();
     while(is_run_)
     {
         viewer_mutex_.lock();
-        viewer_ptr_->spinOnce(1,true);
+//        viewer_ptr_->spinOnce(1,true);
+        viewer_ptr_->spinOnce();
         viewer_mutex_.unlock();
 //        viewer_ptr_->spin();
-        std::cout << "run " << std::endl;
+//        std::cout << "run " << std::endl;
 
         boost::this_thread::sleep(boost::posix_time::microseconds(10000));
     }
     return true;
 
 }
+
 
 
 bool OwnViewer::addMarker(Eigen::Affine3d m_t, int marker_id) {

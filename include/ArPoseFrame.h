@@ -60,11 +60,16 @@
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/features/normal_3d.h>
+#include <pcl/common/common_headers.h>
+
+
+#include <boost/thread/thread.hpp>
 
 
 
-
-#include "OwnViewer.h"
+//#include "OwnViewer.h"
 
 
 
@@ -82,8 +87,7 @@ public:
      */
     ArPoseFrame(int initial_id)
             : intrinsic_matrix_(3, 3, CV_32F),
-              distortion_matrix_(1, 5, CV_32F),
-              viewer_("ArSlAM Test") {
+              distortion_matrix_(1, 5, CV_32F){
 
         dic_ptr_ = new cv::aruco::Dictionary(
                 cv::aruco::getPredefinedDictionary(
@@ -152,7 +156,7 @@ protected:
 
     /////
 
-    OwnViewer viewer_;
+//    OwnViewer viewer_;
 
 
 private:
@@ -164,6 +168,7 @@ void ArPoseFrame::BuildTransform() {
 
     std::map<int, Eigen::Affine3d> ids_pair;
     std::vector<int> id_list;
+    pcl::visualization::PCLVisualizer viewer("test");
     while (1) {
         vecs_mutex_.lock();
         if (tids_.size() > 0) {
@@ -193,8 +198,16 @@ void ArPoseFrame::BuildTransform() {
                             tmp = ids_pair[id_list[j]].inverse() * ids_pair[id_list[i]];
 
                             tmp = transform_map_[id_list[j]] * tmp;
+
                             transform_map_.insert(std::make_pair(id_list[i], tmp));
-                            viewer_.addMarker(tmp,id_list[i]);
+
+//                            viewer_.addMarker(tmp,id_list[i]);
+
+                            viewer.addCoordinateSystem(1.0,Eigen::Affine3f(tmp),
+                                                       "id:"+std::to_string(id_list[i]));
+
+
+
                             break;
                         }
                     }
@@ -212,6 +225,12 @@ void ArPoseFrame::BuildTransform() {
             pose = s->second * ids_pair[id_list[i]] * tmp_pose;
             std::cout << "Pose:" << pose.transpose() << std::endl;
             current_pos_ = pose;
+
+
+
+            viewer.removeCoordinateSystem("camera");
+            viewer.addCoordinateSystem(2.0,Eigen::Affine3f(s->second*ids_pair[id_list[i]]),
+            "camera");
 
             break;
 

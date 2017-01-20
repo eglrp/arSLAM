@@ -33,15 +33,15 @@ include_directories(
 link_directories(
         /usr/local/lib
         /usr/lib
-#        ${PCL_LIBRARY_DIRS}
+        ${PCL_LIBRARY_DIRS}
 )
 
 add_executable(main main.cpp)
-target_link_libraries(main ${OpenCV_LIBS})
+target_link_libraries(main ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 
 add_executable(ArPoseTest ArPoseTest.cpp)
-target_link_libraries(ArPoseTest ${OpenCV_LIBS})
+target_link_libraries(ArPoseTest ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 
 add_executable(VisualTest visualTest.cpp)

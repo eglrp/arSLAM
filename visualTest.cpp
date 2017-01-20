@@ -26,6 +26,7 @@ int main()
     t.setIdentity();
 
     viewer.addMarker(t,1);
+    viewer.test();
 
     int a;
     std::cin >> a;
