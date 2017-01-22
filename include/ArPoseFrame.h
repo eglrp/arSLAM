@@ -48,6 +48,8 @@
 #include <thread>
 #include <mutex>
 
+#include <random>
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/aruco.hpp>
@@ -173,6 +175,11 @@ void ArPoseFrame::BuildTransform() {
     viewer.setBackgroundColor(96,96,96);
 
 
+    //TODO: Just for debug,need delete it before use.
+    std::default_random_engine e;
+    std::uniform_real_distribution<double> urandom(0,0.99999999);
+
+
     viewer.addCoordinateSystem(0.3);
     while (1){
         vecs_mutex_.lock();
@@ -215,6 +222,10 @@ void ArPoseFrame::BuildTransform() {
                                                        "id:"+std::to_string(id_list[i]));
 
 
+                            if(urandom(e) > 0.4)
+                            {
+                                break;
+                            }
 
                             break;
                         }

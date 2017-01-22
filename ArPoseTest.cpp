@@ -15,7 +15,7 @@
 
 int main()
 {
-    cv::VideoCapture cap("/dev/video0");
+    cv::VideoCapture cap("/dev/video1");
 //    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
 //    cap.cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
     cap.set(CV_CAP_PROP_FRAME_WIDTH,1280);
