@@ -235,6 +235,20 @@ void ArPoseFrame::BuildTransform() {
                              *
                              */
 
+                            Eigen::Vector3d flag_vec(tmp.matrix()(0,3),
+                                                     tmp.matrix()(1,3),
+                                                     tmp.matrix()(2,3));
+
+                            if(verify_map_[id_list[i]] == verify_map_.en300590d())
+                            {
+                                std::vector<Eigen::Vector3d> t;
+                                t.push_back(flag_vec);
+                                verify_map_.insert(std::make_pair(id_list[i],t));
+                            }
+
+                            for(int i(0);i<verify_map_[id_list[i]].size();)
+
+
                             {
                                 transform_map_.insert(std::make_pair(id_list[i], tmp));
 
