@@ -147,7 +147,6 @@ protected:
     std::map<int, std::vector<Eigen::Vector3d>> verify_map_; //
     int verify_num_ = 10; // when N(number of similar transform in std::vector) > \
     //verify_num_ ,add this transform to transform_map_;
-
     double lcverify_dis_ = 0.1; // error is small than verify_dis_ is similar transform.
 
     cv::Ptr<cv::aruco::Dictionary> dic_ptr_;
@@ -212,6 +211,11 @@ void ArPoseFrame::BuildTransform() {
 
                     //try to build relationship between id_list[i] and initial_id_.
 
+                    /**
+                     * Search a marker in this frame that position is knowable,
+                     * and use the known marker to compute the unknown position of new
+                     * markers.(all in world frame)
+                     */
                     for (int j(0); j < id_list.size(); ++j) {
                         auto s = transform_map_.find(id_list[j]);
                         if (s != transform_map_.end()) {
@@ -223,18 +227,32 @@ void ArPoseFrame::BuildTransform() {
 
                             tmp = tmp.inverse();
 
-                            transform_map_.insert(std::make_pair(id_list[i], tmp));
+                            /**
+                             * More than N times detected a same position,then insert the position
+                             * into transform_map_.
+                             *
+                             * N control by verify_num_
+                             *
+                             */
+
+                            {
+                                transform_map_.insert(std::make_pair(id_list[i], tmp));
 
 //                            viewer_.addMarker(tmp,id_list[i]);
 
-                            viewer.addCoordinateSystem(0.2, Eigen::Affine3f(tmp.inverse()),
-                                                       "id:" + std::to_string(id_list[i]));
-
-
-                            if (urandom(e) > 0.4) {
-                                break;
+                                viewer.addCoordinateSystem(0.2, Eigen::Affine3f(tmp.inverse()),
+                                                           "id:" + std::to_string(id_list[i]));
                             }
 
+
+
+
+
+
+                            break;
+                        }
+
+                        if (urandom(e) > 0.4) {
                             break;
                         }
                     }
