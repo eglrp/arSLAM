@@ -89,7 +89,7 @@ public:
      */
     ArPoseFrame(int initial_id)
             : intrinsic_matrix_(3, 3, CV_32F),
-              distortion_matrix_(1, 5, CV_32F){
+              distortion_matrix_(1, 5, CV_32F) {
 
         dic_ptr_ = new cv::aruco::Dictionary(
                 cv::aruco::getPredefinedDictionary(
@@ -141,6 +141,15 @@ protected:
 
     std::map<int, Eigen::Affine3d> transform_map_;//transform_map_ to first
 
+    /**
+     * verify
+     */
+    std::map<int, std::vector<Eigen::Vector3d>> verify_map_; //
+    int verify_num_ = 10; // when N(number of similar transform in std::vector) > \
+    //verify_num_ ,add this transform to transform_map_;
+
+    double lcverify_dis_ = 0.1; // error is small than verify_dis_ is similar transform.
+
     cv::Ptr<cv::aruco::Dictionary> dic_ptr_;
 //    cv::Ptr<cv::aruco::DetectorParameters> para_ptr_;
 
@@ -172,16 +181,16 @@ void ArPoseFrame::BuildTransform() {
     std::vector<int> id_list;
     pcl::visualization::PCLVisualizer viewer("test");
 
-    viewer.setBackgroundColor(96,96,96);
+    viewer.setBackgroundColor(96, 96, 96);
 
 
     //TODO: Just for debug,need delete it before use.
     std::default_random_engine e;
-    std::uniform_real_distribution<double> urandom(0,0.99999999);
+    std::uniform_real_distribution<double> urandom(0, 0.99999999);
 
 
     viewer.addCoordinateSystem(0.3);
-    while (1){
+    while (1) {
         vecs_mutex_.lock();
         if (tids_.size() > 0) {
             ids_pair.clear();
@@ -218,12 +227,11 @@ void ArPoseFrame::BuildTransform() {
 
 //                            viewer_.addMarker(tmp,id_list[i]);
 
-                            viewer.addCoordinateSystem(0.2,Eigen::Affine3f(tmp.inverse()),
-                                                       "id:"+std::to_string(id_list[i]));
+                            viewer.addCoordinateSystem(0.2, Eigen::Affine3f(tmp.inverse()),
+                                                       "id:" + std::to_string(id_list[i]));
 
 
-                            if(urandom(e) > 0.4)
-                            {
+                            if (urandom(e) > 0.4) {
                                 break;
                             }
 
@@ -247,15 +255,14 @@ void ArPoseFrame::BuildTransform() {
             current_pos_ = pose;
 
 
-
             viewer.removeCoordinateSystem("camera");
-            viewer.addCoordinateSystem(0.10,Eigen::Affine3f(ids_pair[id_list[i]]*s->second).inverse(),
-            "camera");
+            viewer.addCoordinateSystem(0.10, Eigen::Affine3f(ids_pair[id_list[i]] * s->second).inverse(),
+                                       "camera");
 
 
             viewer.removeShape("arrow");
-            viewer.addArrow(pcl::PointXYZ(pose(0),pose(1),pose(2)),
-            pcl::PointXYZ(0,0,0),200,20,20,"arrow");
+            viewer.addArrow(pcl::PointXYZ(pose(0), pose(1), pose(2)),
+                            pcl::PointXYZ(0, 0, 0), 200, 20, 20, "arrow");
 
             break;
 

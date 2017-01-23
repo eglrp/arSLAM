@@ -48,3 +48,7 @@ target_link_libraries(ArPoseTest ${OpenCV_LIBS} ${PCL_LIBRARIES})
 add_executable(VisualTest visualTest.cpp)
 target_link_libraries(VisualTest ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
+
+add_executable(gwotest g2oTest.cpp)
+target_link_libraries(gwotest ${OpenCV_LIBS})
+
