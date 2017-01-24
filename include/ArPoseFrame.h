@@ -70,6 +70,7 @@
 #include <boost/thread/thread.hpp>
 
 
+//#include "MYCH
 
 //#include "OwnViewer.h"
 
@@ -248,11 +249,12 @@ void ArPoseFrame::BuildTransform() {
                                 t.push_back(flag_vec);
                                 verify_map_.insert(std::make_pair(id_list[i],t));
                             }else{
-                                //
+                                //find similar position.
                                 int tmp_num(0);
-                                std::vector<Eigen::Vector3d> tv(verify_map_[id_list[i]]);
+                                std::vector<Eigen::Vector3d> tv(verify_map_[id_list[i]]);//all position
                                 for(int ti(0);ti<tv.size();++ti)
                                 {
+                                    // current position similar to tv[i].
                                     if((flag_vec-tv[i]).norm() <lcverify_dis_ )
                                     {
                                         tmp_num ++;
@@ -260,7 +262,7 @@ void ArPoseFrame::BuildTransform() {
                                 }
 
 
-                                if(tmp_num>verify_num_)
+//                                if(tmp_num>verify_num_)
                                 {
                                     transform_map_.insert(std::make_pair(id_list[i], tmp));
 
