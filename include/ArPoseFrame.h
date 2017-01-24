@@ -284,9 +284,9 @@ void ArPoseFrame::BuildTransform() {
 //                            break;
                         }
 
-                        if (urandom(e) > 0.4) {
+//                        if (urandom(e) > 0.4) {
 //                            break;
-                        }
+//                        }
                     }
                 }
 
