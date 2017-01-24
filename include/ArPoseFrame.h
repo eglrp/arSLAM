@@ -146,9 +146,9 @@ protected:
      * verify
      */
     std::map<int, std::vector<Eigen::Vector3d>> verify_map_; //
-    int verify_num_ = 10; // when N(number of similar transform in std::vector) > \
+    int verify_num_ = 100; // when N(number of similar transform in std::vector) > \
     //verify_num_ ,add this transform to transform_map_;
-    double lcverify_dis_ = 0.1; // error is small than verify_dis_ is similar transform.
+    double lcverify_dis_ = 0.04; // error is small than verify_dis_ is similar transform.
 
     cv::Ptr<cv::aruco::Dictionary> dic_ptr_;
 //    cv::Ptr<cv::aruco::DetectorParameters> para_ptr_;
@@ -260,9 +260,12 @@ void ArPoseFrame::BuildTransform() {
                                         tmp_num ++;
                                     }
                                 }
+                                verify_map_[id_list[i]].push_back(flag_vec);
 
+                                std::cout << "tmp num : " << tmp_num << " in "
+                                          << tv.size() << std::endl;
 
-//                                if(tmp_num>verify_num_)
+                                if(tmp_num>verify_num_)
                                 {
                                     transform_map_.insert(std::make_pair(id_list[i], tmp));
 
@@ -278,16 +281,11 @@ void ArPoseFrame::BuildTransform() {
 //
 //                            }
 
-
-
-
-
-
-                            break;
+//                            break;
                         }
 
                         if (urandom(e) > 0.4) {
-                            break;
+//                            break;
                         }
                     }
                 }
