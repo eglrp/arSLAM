@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3   -lopencv_aruco")
 
+LIST(APPEND CMAKE_MODULE_PATH ./cmake_modules)
+
 #
 #list(APPEND CMAKE_MODULE_PATH usr/share/OpenCV/
 #        )
@@ -16,6 +18,16 @@ find_package(OpenCV REQUIRED)
 find_package(PCL  REQUIRED)
 add_definitions(${PCL_DEFINITIONS})
 
+# G2O
+SET(G2O_ROOT "/usr/local/include/g2o")
+
+FIND_PACKAGE(G2O)
+IF(G2O_FOUND)
+
+ELSE(G2O_FOUND)
+    MESSAGE(FATAL_ERROR "g2o not FOUND.")
+ENDIF(G2O_FOUND)
+
 include_directories(
         ${EIGEN3_INCLUDE_DIR}
         ${OpenCV_INCLUDE_DIRS}
@@ -24,6 +36,8 @@ include_directories(
         /usr/local/cuda/include
         /usr/include
         /usr/local/include
+#        ~/Code/g2o/g2o
+
 )
 
 #aux_source_directory(
@@ -35,6 +49,7 @@ link_directories(
         /usr/local/lib
         /usr/lib
         ${PCL_LIBRARY_DIRS}
+#        ~/Code/g2o/lib
 )
 
 add_executable(main main.cpp)
