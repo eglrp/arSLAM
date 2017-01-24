@@ -240,7 +240,8 @@ void ArPoseFrame::BuildTransform() {
                                                      tmp.matrix()(2,3));
 
 
-                            if(verify_map_[id_list[i]] == verify_map_.end())
+                            auto vs = verify_map_.find(id_list[i]);
+                            if(vs == verify_map_.end())
                             {
                                 // First time detected a new marker.
                                 std::vector<Eigen::Vector3d> t;
@@ -249,7 +250,7 @@ void ArPoseFrame::BuildTransform() {
                             }else{
                                 //
                                 int tmp_num(0);
-                                std::Vector<Eigen::Vector3d> tv(verify_map_[id_list[i]]);
+                                std::vector<Eigen::Vector3d> tv(verify_map_[id_list[i]]);
                                 for(int ti(0);ti<tv.size();++ti)
                                 {
                                     if((flag_vec-tv[i]).norm() <lcverify_dis_ )
