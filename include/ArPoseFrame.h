@@ -261,19 +261,19 @@ void ArPoseFrame::BuildTransform() {
 
                                 if(tmp_num>verify_num_)
                                 {
-
-                                }
-                            }
-
-                            for(int i(0);i<verify_map_[id_list[i]].size();)
-                            {
-                                transform_map_.insert(std::make_pair(id_list[i], tmp));
+                                    transform_map_.insert(std::make_pair(id_list[i], tmp));
 
 //                            viewer_.addMarker(tmp,id_list[i]);
 
-                                viewer.addCoordinateSystem(0.2, Eigen::Affine3f(tmp.inverse()),
-                                                           "id:" + std::to_string(id_list[i]));
+                                    viewer.addCoordinateSystem(0.2, Eigen::Affine3f(tmp.inverse()),
+                                                               "id:" + std::to_string(id_list[i]));
+                                }
                             }
+
+//                            for(int i(0);i<verify_map_[id_list[i]].size();)
+//                            {
+//
+//                            }
 
 
 
