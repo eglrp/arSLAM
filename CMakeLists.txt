@@ -20,7 +20,7 @@ add_definitions(${PCL_DEFINITIONS})
 
 # G2O
 SET(G2O_ROOT "/usr/local/include/g2o")
-
+FIND_PACKAGE( CSparse REQUIRED)
 FIND_PACKAGE(G2O)
 IF(G2O_FOUND)
 
@@ -38,6 +38,7 @@ include_directories(
         /usr/include
         /usr/local/include
 #        ~/Code/g2o/g2o
+        ${CSPARSE_INCLUDE_DIR}
 
 )
 
