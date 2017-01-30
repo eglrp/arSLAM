@@ -24,6 +24,7 @@ SET(G2O_ROOT "/usr/local/include/g2o")
 FIND_PACKAGE(G2O)
 IF(G2O_FOUND)
 
+    MESSAGE("FIND g2o")
 ELSE(G2O_FOUND)
     MESSAGE(FATAL_ERROR "g2o not FOUND.")
 ENDIF(G2O_FOUND)
@@ -35,7 +36,7 @@ include_directories(
         ./include
         /usr/local/cuda/include
         /usr/include
-#        /usr/local/include
+        /usr/local/include
 #        ~/Code/g2o/g2o
 
 )
