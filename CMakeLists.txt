@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3   -lopencv_aruco")
 
-LIST(APPEND CMAKE_MODULE_PATH ./cmake_modules)
+LIST(APPEND CMAKE_MODULE_PATH ./cmake_modules/  /home/steve/Code/arSLAM/cmake_modules/)
 
 #
 #list(APPEND CMAKE_MODULE_PATH usr/share/OpenCV/
@@ -35,7 +35,7 @@ include_directories(
         ./include
         /usr/local/cuda/include
         /usr/include
-        /usr/local/include
+#        /usr/local/include
 #        ~/Code/g2o/g2o
 
 )
