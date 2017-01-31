@@ -62,41 +62,41 @@ int main(int argc, char** argv)
     arg.parseArgs(argc, argv);
 
     // create the linear solver
-    BlockSolverX::LinearSolverType * linearSolver = new LinearSolverCSparse<BlockSolverX::PoseMatrixType>();
-
-    // create the block solver on top of the linear solver
-    BlockSolverX* blockSolver = new BlockSolverX(linearSolver);
-
-    // create the algorithm to carry out the optimization
-    //OptimizationAlgorithmGaussNewton* optimizationAlgorithm = new OptimizationAlgorithmGaussNewton(blockSolver);
-    OptimizationAlgorithmLevenberg* optimizationAlgorithm = new OptimizationAlgorithmLevenberg(blockSolver);
-
-    // NOTE: We skip to fix a variable here, either this is stored in the file
-    // itself or Levenberg will handle it.
-
-    // create the optimizer to load the data and carry out the optimization
-    SparseOptimizer optimizer;
-    optimizer.setVerbose(true);
-    optimizer.setAlgorithm(optimizationAlgorithm);
-
-    ifstream ifs(inputFilename.c_str());
-    if (! ifs) {
-        cerr << "unable to open " << inputFilename << endl;
-        return 1;
-    }
-    optimizer.load(ifs);
-    optimizer.initializeOptimization();
-    optimizer.optimize(maxIterations);
-
-    if (outputFilename.size() > 0) {
-        if (outputFilename == "-") {
-            cerr << "saving to stdout";
-            optimizer.save(cout);
-        } else {
-            cerr << "saving " << outputFilename << " ... ";
-            optimizer.save(outputFilename.c_str());
-        }
-        cerr << "done." << endl;
-    }
+//    BlockSolverX::LinearSolverType * linearSolver = new LinearSolverCSparse<BlockSolverX::PoseMatrixType>();
+//
+//    // create the block solver on top of the linear solver
+//    BlockSolverX* blockSolver = new BlockSolverX(linearSolver);
+//
+//    // create the algorithm to carry out the optimization
+//    //OptimizationAlgorithmGaussNewton* optimizationAlgorithm = new OptimizationAlgorithmGaussNewton(blockSolver);
+//    OptimizationAlgorithmLevenberg* optimizationAlgorithm = new OptimizationAlgorithmLevenberg(blockSolver);
+//
+//    // NOTE: We skip to fix a variable here, either this is stored in the file
+//    // itself or Levenberg will handle it.
+//
+//    // create the optimizer to load the data and carry out the optimization
+//    SparseOptimizer optimizer;
+//    optimizer.setVerbose(true);
+//    optimizer.setAlgorithm(optimizationAlgorithm);
+//
+//    ifstream ifs(inputFilename.c_str());
+//    if (! ifs) {
+//        cerr << "unable to open " << inputFilename << endl;
+//        return 1;
+//    }
+//    optimizer.load(ifs);
+//    optimizer.initializeOptimization();
+//    optimizer.optimize(maxIterations);
+//
+//    if (outputFilename.size() > 0) {
+//        if (outputFilename == "-") {
+//            cerr << "saving to stdout";
+//            optimizer.save(cout);
+//        } else {
+//            cerr << "saving " << outputFilename << " ... ";
+//            optimizer.save(outputFilename.c_str());
+//        }
+//        cerr << "done." << endl;
+//    }
     return 0;
 }
