@@ -20,20 +20,20 @@ find_package(PCL  REQUIRED)
 add_definitions(${PCL_DEFINITIONS})
 
 # g2o
-# add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/g2o)
+ add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/g2o)
 #include_directories()
 #link_directories(${PROJECT_SOURCE_DIR}/thirdparty/g2o/lib)
-# G2OSET(G2O_LIB_TYPE SHARED)
-#SET(G2O_ROOT "/usr/local/include/g2o")
+# G2O
+SET(G2O_ROOT "/usr/local/include/g2o")
 FIND_PACKAGE(G2O REQUIRED)
 FIND_PACKAGE( CSparse REQUIRED)
-IF(G2O_FOUND)
-
-    MESSAGE("FIND g2o")
-ELSE(G2O_FOUND)
-    MESSAGE(FATAL_ERROR "g2o not FOUND.")
-ENDIF(G2O_FOUND)
-
+#IF(G2O_FOUND)
+#
+#    MESSAGE("FIND g2o")
+#ELSE(G2O_FOUND)
+#    MESSAGE(FATAL_ERROR "g2o not FOUND."
+#ENDIF(G2O_FOUND)
+SET(G2O_LIB_TYPE SHARE)
 include_directories(
         ${EIGEN3_INCLUDE_DIR}
         ${OpenCV_INCLUDE_DIRS}
@@ -59,13 +59,9 @@ link_directories(
         /usr/lib
         ${PCL_LIBRARY_DIRS}
 #        ~/Code/g2o/libCMakeLists.txt:60
-#{PROJECT_SOURCE_DIR}/thirdparty/g2o/lib
+${PROJECT_SOURCE_DIR}/thirdparty/g2o/lib
 )
-SET(G2O_LIBS g2o_cli g2o_ext_freeglut_minimal g2o_simulator g2o_solver_slam2d_linear
-        g2o_types_icp g2o_types_slam2d g2o_core g2o_interface g2o_solver_csparse
-        g2o_solver_structure_only g2o_types_sba g2o_types_slam3d g2o_csparse_extension
-        g2o_opengl_helper g2o_solver_dense g2o_stuff g2o_types_sclam2d g2o_parser
-        g2o_solver_pcg g2o_types_data g2o_types_sim3 cxsparse )
+SET(G2O_LIBS g2o_cli g2o_ext_freeglut_minimal g2o_simulator g2o_solver_slam2d_linear g2o_types_icp g2o_types_slam2d g2o_core g2o_interface g2o_solver_csparse g2o_solver_structure_only g2o_types_sba g2o_types_slam3d g2o_csparse_extension g2o_opengl_helper g2o_solver_dense g2o_stuff g2o_types_sclam2d g2o_parser g2o_solver_pcg g2o_types_data g2o_types_sim3 cxsparse )
 
 
 add_executable(main main.cpp)
@@ -81,6 +77,6 @@ target_link_libraries(VisualTest ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 
 add_executable(gwotest g2oTest.cpp)
-#target_link_libraries(gwotest  ${OpenCV_LIBS} )
-target_link_libraries(gwotest ${G2O_LIBS} ${OpenCV_LIBS} )
+target_link_libraries(gwotest  ${OpenCV_LIBS} )
+#target_link_libraries(gwotest ${G2O_LIBS} ${OpenCV_LIBS} )
 
