@@ -20,7 +20,7 @@ find_package(PCL  REQUIRED)
 add_definitions(${PCL_DEFINITIONS})
 
 # g2o
- add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/g2o)
+# add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/g2o)
 #include_directories()
 #link_directories(${PROJECT_SOURCE_DIR}/thirdparty/g2o/lib)
 # G2O
@@ -33,7 +33,7 @@ FIND_PACKAGE( CSparse REQUIRED)
 #ELSE(G2O_FOUND)
 #    MESSAGE(FATAL_ERROR "g2o not FOUND."
 #ENDIF(G2O_FOUND)
-SET(G2O_LIB_TYPE SHARE)
+#SET(G2O_LIB_TYPE SHARE)
 include_directories(
         ${EIGEN3_INCLUDE_DIR}
         ${OpenCV_INCLUDE_DIRS}
