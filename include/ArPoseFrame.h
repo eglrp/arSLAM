@@ -318,7 +318,7 @@ void ArPoseFrame::BuildTransform() {
             {
                 if((pose_list.at(i)-pose_list.at(j)).norm()<dist_threold)
                 {
-                    std::cout << "small than threold" << std::endl;
+//                    std::cout << "small than threold" << std::endl;
                     score_list[i]+=1;
                 }
             }
