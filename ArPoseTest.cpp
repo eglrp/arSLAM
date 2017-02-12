@@ -40,9 +40,18 @@ int main()
 //    if(record_video) {
 //        cv::VideoWriter videoWriter("log.avi",0,30,cv::Size(1280,720),true);
 //    }
+    cv::VideoCapture capfile("./dataset/log.avi");
     while(cap.isOpened())
     {
-        cap >> in;
+//        cap >> in;
+        capfile >>in;
+
+        if(in.empty())
+        {
+            capfile.release();
+            capfile.open("./dataset/log.avi");
+            capfile >> in;
+        }
 //if(record_video)       videoWriter << in;
 //        cv::imshow("test",in);
         arPoseFrame.ProcessImg(in);

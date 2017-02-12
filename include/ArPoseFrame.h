@@ -294,7 +294,7 @@ void ArPoseFrame::BuildTransform() {
 
         }
 
-        //Get Pose.
+        ////Get Pose.
 
         Eigen::Vector3d pose(0, 0, 0);
         std::vector <Eigen::Vector3d> pose_list;
@@ -311,7 +311,10 @@ void ArPoseFrame::BuildTransform() {
 
         }
 
-        double dist_threold(0.2);
+        /**
+         * vote to similar pose.
+         */
+        double dist_threold(0.13);
         for(int i(0);i<pose_list.size();++i)
         {
             for(int j(0);j<pose_list.size();++j)
@@ -331,6 +334,17 @@ void ArPoseFrame::BuildTransform() {
             {
                pose += pose_list[i];
                 all_num ++;
+            }
+            if(score_list[i]==2 && pose_list.size()>4)
+            {
+                int errortag_id = id_list[i];
+                auto tmp_pair = transform_map_.find(errortag_id);
+                if(tmp_pair!=transform_map_.end())
+                {
+                    transform_map_.erase(errortag_id);
+                    viewer.removeCoordinateSystem("id:"+std::to_string(errortag_id),0);
+                }
+
             }
 
         }
@@ -354,7 +368,7 @@ void ArPoseFrame::BuildTransform() {
 
         viewer.removeShape("arrow");
         viewer.addArrow(pcl::PointXYZ(pose(0), pose(1), pose(2)),
-                        pcl::PointXYZ(0, 0, 0), 200, 20, 20, "arrow");
+                        pcl::PointXYZ(0, 0, 0), 200, 200, 20, "arrow");
 
         viewer.spinOnce(1);
 
