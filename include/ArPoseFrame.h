@@ -267,7 +267,37 @@ void ArPoseFrame::BuildTransform() {
                                 std::cout << "tmp num : " << tmp_num << " in "
                                           << tv.size() << std::endl;
 
-                                if(tmp_num>verify_num_)
+                                /** Extract conditions
+                                 * 1.z-axis  vertically relative to horizontal plane
+                                 *
+                                 * 2.the origin of coordinates is in the x-y plane(z equal to zero).
+                                 */
+
+                                bool is_extract_condition_ok(true);
+
+                                /// 1.
+                                Eigen::Vector4d src_z(0,0,1,0);
+                                Eigen::Vector4d target_z(0,0,0,0);
+
+                                target_z = tmp * src_z;
+//                                std::cout << "target z :" << target_z.transpose() << std::endl;
+                                if(target_z[2]<0.97)
+                                {
+                                    is_extract_condition_ok = false;
+                                }
+
+                                /// 2.
+                                Eigen::Vector4d src_zero(0,0,0,1);
+                                src_zero = tmp * src_zero;
+
+                                std::cout << "zero : " << src_zero.transpose()  << std::endl;
+                                if(src_zero[2]>0.03 || src_zero[2]<-0.03)
+                                {
+                                    is_extract_condition_ok = false;
+                                }
+
+
+                                if(tmp_num>verify_num_ && is_extract_condition_ok)
                                 {
                                     transform_map_.insert(std::make_pair(id_list[i], tmp));
 
@@ -357,9 +387,9 @@ void ArPoseFrame::BuildTransform() {
         }else{
             pose /=double(all_num);
         }
-        std::cout << all_num << "is all num"
-                  << pose_list.size()  <<"is pose list size"
-                  << std::endl;
+//        std::cout << all_num << "is all num"
+//                  << pose_list.size()  <<"is pose list size"
+//                  << std::endl;
 
 
         current_pos_ = pose;
