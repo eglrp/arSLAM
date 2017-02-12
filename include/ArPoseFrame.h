@@ -331,6 +331,7 @@ void ArPoseFrame::ProcessImg(cv::Mat in) {
 
 
     cv::aruco::detectMarkers(in, dic_ptr_, corner_, ids_);//,para_ptr_);
+
     if (ids_.size() > 0) {
         if (initial_id_ < 0) {
             initial_id_ = ids_[0];
@@ -354,10 +355,13 @@ void ArPoseFrame::ProcessImg(cv::Mat in) {
             tids_ = ids_;
             vecs_mutex_.unlock();
 
+            cv::aruco::drawDetectedMarkers(in,in,ids_);
+
             for (int i(0); i < rvecs.size(); ++i) {
 
                 cv::aruco::drawAxis(in, intrinsic_matrix_, distortion_matrix_,
                                     rvecs[i], tvecs[i], draw_length_);
+
 
             }
 

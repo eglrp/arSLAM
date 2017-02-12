@@ -3,7 +3,7 @@ project(arSLAM)
 
 #set(CMAKE_CXX_STANDARD 11)
 #
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3   -lopencv_aruco")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3   -lopencv_aruco -lpthread")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -O3   -lopencv_aruco")
 
 LIST(APPEND CMAKE_MODULE_PATH ./cmake_modules/  /home/steve/Code/arSLAM/cmake_modules/)
