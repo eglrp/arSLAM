@@ -37,14 +37,13 @@ int main()
     ArPoseFrame arPoseFrame(11);
 
 
-//    if(record_video) {
 //        cv::VideoWriter videoWriter("log.avi",0,30,cv::Size(1280,720),true);
-//    }
     cv::VideoCapture capfile("./dataset/log.avi");
     while(cap.isOpened())
     {
-//        cap >> in;
-        capfile >>in;
+        cap >> in;
+//        capfile >>in;
+
 
         if(in.empty())
         {
@@ -52,7 +51,7 @@ int main()
             capfile.open("./dataset/log.avi");
             capfile >> in;
         }
-//if(record_video)       videoWriter << in;
+//   videoWriter << in;
 //        cv::imshow("test",in);
         arPoseFrame.ProcessImg(in);
         cv::waitKey(10);

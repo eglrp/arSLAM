@@ -314,7 +314,7 @@ void ArPoseFrame::BuildTransform() {
         /**
          * vote to similar pose.
          */
-        double dist_threold(0.13);
+        double dist_threold(0.33);
         for(int i(0);i<pose_list.size();++i)
         {
             for(int j(0);j<pose_list.size();++j)
