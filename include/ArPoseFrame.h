@@ -159,7 +159,9 @@ protected:
     std::vector<int> ids_;
 
 
-    double real_length_ = 0.201;
+//    double real_length_ = 0.201;//
+
+    double real_length_ = 0.199;//
     double draw_length_ = 0.3;
 
     Eigen::Vector3d current_pos_ = Eigen::Vector3d(0, 0, 0);
@@ -341,8 +343,8 @@ void ArPoseFrame::BuildTransform() {
                 auto tmp_pair = transform_map_.find(errortag_id);
                 if(tmp_pair!=transform_map_.end())
                 {
-                    transform_map_.erase(errortag_id);
-                    viewer.removeCoordinateSystem("id:"+std::to_string(errortag_id),0);
+//                    transform_map_.erase(errortag_id);
+//                    viewer.removeCoordinateSystem("id:"+std::to_string(errortag_id),0);
                 }
 
             }

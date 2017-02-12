@@ -38,7 +38,8 @@ int main()
 
 
 //        cv::VideoWriter videoWriter("log.avi",0,30,cv::Size(1280,720),true);
-    cv::VideoCapture capfile("./dataset/log.avi");
+    std::string log_file_name("./dataset/log2.avi");
+    cv::VideoCapture capfile(log_file_name);
     while(cap.isOpened())
     {
         cap >> in;
@@ -48,7 +49,7 @@ int main()
         if(in.empty())
         {
             capfile.release();
-            capfile.open("./dataset/log.avi");
+            capfile.open(log_file_name);
             capfile >> in;
         }
 //   videoWriter << in;
