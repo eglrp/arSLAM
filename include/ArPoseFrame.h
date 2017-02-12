@@ -146,7 +146,7 @@ protected:
      * verify
      */
     std::map<int, std::vector<Eigen::Vector3d>> verify_map_; //
-    int verify_num_ = 1000; // when N(number of similar transform in std::vector) > \
+    int verify_num_ = 100; // when N(number of similar transform in std::vector) > \
     //verify_num_ ,add this transform to transform_map_;
     double lcverify_dis_ = 0.1; // error is small than verify_dis_ is similar transform.
 
@@ -238,28 +238,26 @@ void ArPoseFrame::BuildTransform() {
                              *
                              */
 
-                            Eigen::Vector3d flag_vec(tmp.matrix()(0,3),
-                                                     tmp.matrix()(1,3),
-                                                     tmp.matrix()(2,3));
+                            Eigen::Vector3d flag_vec(tmp.matrix()(0, 3),
+                                                     tmp.matrix()(1, 3),
+                                                     tmp.matrix()(2, 3));
 
 
                             auto vs = verify_map_.find(id_list[i]);
-                            if(vs == verify_map_.end())
-                            {
+                            auto tm  = transform_map_.find(id_list[i]);
+                            if (vs == verify_map_.end()) {
                                 // First time detected a new marker.
                                 std::vector<Eigen::Vector3d> t;
                                 t.push_back(flag_vec);
-                                verify_map_.insert(std::make_pair(id_list[i],t));
-                            }else{
+                                verify_map_.insert(std::make_pair(id_list[i], t));
+                            } else if(tm == transform_map_.end()){//never added to transform map
                                 //find similar position.
                                 int tmp_num(0);
                                 std::vector<Eigen::Vector3d> tv(verify_map_[id_list[i]]);//all position
-                                for(int ti(0);ti<tv.size();++ti)
-                                {
+                                for (int ti(0); ti < tv.size(); ++ti) {
                                     // current position similar to tv[i].
-                                    if((flag_vec-tv[i]).norm() <lcverify_dis_ )
-                                    {
-                                        tmp_num ++;
+                                    if ((flag_vec - tv[i]).norm() < lcverify_dis_) {
+                                        tmp_num++;
                                     }
                                 }
                                 verify_map_[id_list[i]].push_back(flag_vec);
@@ -276,29 +274,28 @@ void ArPoseFrame::BuildTransform() {
                                 bool is_extract_condition_ok(true);
 
                                 /// 1.
-                                Eigen::Vector4d src_z(0,0,1,0);
-                                Eigen::Vector4d target_z(0,0,0,0);
+                                Eigen::Vector4d src_z(0, 0, 1, 0);
+                                Eigen::Vector4d target_z(0, 0, 0, 0);
 
                                 target_z = tmp * src_z;
 //                                std::cout << "target z :" << target_z.transpose() << std::endl;
-                                if(target_z[2]<0.97)
-                                {
+                                if (target_z[2] < 0.97) {
                                     is_extract_condition_ok = false;
                                 }
 
                                 /// 2.
-                                Eigen::Vector4d src_zero(0,0,0,1);
+                                Eigen::Vector4d src_zero(0, 0, 0, 1);
                                 src_zero = tmp * src_zero;
 
-                                std::cout << "zero : " << src_zero.transpose()  << std::endl;
-                                if(src_zero[2]>0.03 || src_zero[2]<-0.03)
-                                {
+                                std::cout << "zero : " << src_zero.transpose() << std::endl;
+                                if (src_zero[2] > 0.03 || src_zero[2] < -0.03) {
                                     is_extract_condition_ok = false;
                                 }
 
 
-                                if(tmp_num>verify_num_ && is_extract_condition_ok)
-                                {
+
+
+                                if (tmp_num > verify_num_ && is_extract_condition_ok) {
                                     transform_map_.insert(std::make_pair(id_list[i], tmp));
 
 //                            viewer_.addMarker(tmp,id_list[i]);
@@ -329,8 +326,8 @@ void ArPoseFrame::BuildTransform() {
         ////Get Pose.
 
         Eigen::Vector3d pose(0, 0, 0);
-        std::vector <Eigen::Vector3d> pose_list;
-        std::vector <int> score_list;
+        std::vector<Eigen::Vector3d> pose_list;
+        std::vector<int> score_list;
         for (int i(0); i < id_list.size(); ++i) {
             Eigen::Vector3d tmp_pose(0, 0, 0);
             auto s = transform_map_.find(id_list[i]);
@@ -347,51 +344,57 @@ void ArPoseFrame::BuildTransform() {
          * vote to similar pose.
          */
         double dist_threold(0.33);
-        for(int i(0);i<pose_list.size();++i)
-        {
-            for(int j(0);j<pose_list.size();++j)
-            {
-                if((pose_list.at(i)-pose_list.at(j)).norm()<dist_threold)
-                {
+        for (int i(0); i < pose_list.size(); ++i) {
+            for (int j(0); j < pose_list.size(); ++j) {
+                if ((pose_list.at(i) - pose_list.at(j)).norm() < dist_threold) {
 //                    std::cout << "small than threold" << std::endl;
-                    score_list[i]+=1;
+                    score_list[i] += 1;
                 }
             }
         }
 
         int all_num(0);
-        for(int i(0);i<pose_list.size();++i)
-        {
-            if(score_list[i]>=score_list.size()-1)
-            {
-               pose += pose_list[i];
-                all_num ++;
+        for (int i(0); i < pose_list.size(); ++i) {
+            if (score_list[i] >= score_list.size() - 2) {
+                pose += pose_list[i];
+                all_num++;
             }
-            if(score_list[i]==2 && pose_list.size()>4)
-            {
-                int errortag_id = id_list[i];
-                auto tmp_pair = transform_map_.find(errortag_id);
-                if(tmp_pair!=transform_map_.end())
-                {
-//                    transform_map_.erase(errortag_id);
-//                    viewer.removeCoordinateSystem("id:"+std::to_string(errortag_id),0);
-                }
 
-            }
+
+            /// delete error value in transform_map_.
+//            if(score_list[i]==2 && pose_list.size()>4)
+//            {
+//                int errortag_id = id_list[i];
+//                auto tmp_pair = transform_map_.find(errortag_id);
+//                if(tmp_pair!=transform_map_.end())
+//                {
+////                    transform_map_.erase(errortag_id);
+////                    viewer.removeCoordinateSystem("id:"+std::to_string(errortag_id),0);
+//                }
+//
+//            }
 
         }
 
-        if(all_num == 0)
-        {
-            pose=Eigen::Vector3d(0,0,0);
-        }else{
-            pose /=double(all_num);
+        if (all_num == 0) {
+            pose = Eigen::Vector3d(0, 0, 0);
+//            if(pose_list.size()>0)
+//            {
+//                pose = pose_list[0];
+//            }
+        } else {
+            pose /= double(all_num);
         }
 //        std::cout << all_num << "is all num"
 //                  << pose_list.size()  <<"is pose list size"
 //                  << std::endl;
 
 
+        if(std::isnan(pose[2]))
+        {
+//            pose[2] = current_pos_[2];
+            pose = Eigen::Vector3d(0,0,0);
+        }
         current_pos_ = pose;
 //        viewer.removeCoordinateSystem("camera");
 //        viewer.addCoordinateSystem(0.10, Eigen::Affine3f(ids_pair[id_list[i]] * s->second).inverse(),
@@ -417,7 +420,7 @@ void ArPoseFrame::ProcessImg(cv::Mat in) {
 
     cv::aruco::detectMarkers(in, dic_ptr_, corner_, ids_);//,para_ptr_);
 
-    cv::aruco::drawDetectedMarkers(in,corner_,ids_);
+    cv::aruco::drawDetectedMarkers(in, corner_, ids_);
 
     if (ids_.size() > 0) {
         if (initial_id_ < 0) {
