@@ -146,9 +146,9 @@ protected:
      * verify
      */
     std::map<int, std::vector<Eigen::Vector3d>> verify_map_; //
-    int verify_num_ = 100; // when N(number of similar transform in std::vector) > \
+    int verify_num_ = 1000; // when N(number of similar transform in std::vector) > \
     //verify_num_ ,add this transform to transform_map_;
-    double lcverify_dis_ = 0.04; // error is small than verify_dis_ is similar transform.
+    double lcverify_dis_ = 0.1; // error is small than verify_dis_ is similar transform.
 
     cv::Ptr<cv::aruco::Dictionary> dic_ptr_;
 //    cv::Ptr<cv::aruco::DetectorParameters> para_ptr_;
@@ -295,28 +295,67 @@ void ArPoseFrame::BuildTransform() {
         }
 
         //Get Pose.
+
+        Eigen::Vector3d pose(0, 0, 0);
+        std::vector <Eigen::Vector3d> pose_list;
+        std::vector <int> score_list;
         for (int i(0); i < id_list.size(); ++i) {
             Eigen::Vector3d tmp_pose(0, 0, 0);
             auto s = transform_map_.find(id_list[i]);
-            Eigen::Vector3d pose(0, 0, 0);
+
 //            pose =  ids_pair[id_list[i]] * s->second * tmp_pose;
-            pose = s->second.inverse() * ids_pair[id_list[i]].inverse() * tmp_pose;
+            tmp_pose = s->second.inverse() * ids_pair[id_list[i]].inverse() * tmp_pose;
 //            std::cout << "Pose:" << pose.transpose() << std::endl;
-            current_pos_ = pose;
-
-
-            viewer.removeCoordinateSystem("camera");
-            viewer.addCoordinateSystem(0.10, Eigen::Affine3f(ids_pair[id_list[i]] * s->second).inverse(),
-                                       "camera");
-
-
-            viewer.removeShape("arrow");
-            viewer.addArrow(pcl::PointXYZ(pose(0), pose(1), pose(2)),
-                            pcl::PointXYZ(0, 0, 0), 200, 20, 20, "arrow");
-
-            break;
+            pose_list.push_back(tmp_pose);
+            score_list.push_back(0);
 
         }
+
+        double dist_threold(0.2);
+        for(int i(0);i<pose_list.size();++i)
+        {
+            for(int j(0);j<pose_list.size();++j)
+            {
+                if((pose_list.at(i)-pose_list.at(j)).norm()<dist_threold)
+                {
+                    std::cout << "small than threold" << std::endl;
+                    score_list[i]+=1;
+                }
+            }
+        }
+
+        int all_num(0);
+        for(int i(0);i<pose_list.size();++i)
+        {
+            if(score_list[i]>=score_list.size()-1)
+            {
+               pose += pose_list[i];
+                all_num ++;
+            }
+
+        }
+
+        if(all_num == 0)
+        {
+            pose=Eigen::Vector3d(0,0,0);
+        }else{
+            pose /=double(all_num);
+        }
+        std::cout << all_num << "is all num"
+                  << pose_list.size()  <<"is pose list size"
+                  << std::endl;
+
+
+        current_pos_ = pose;
+//        viewer.removeCoordinateSystem("camera");
+//        viewer.addCoordinateSystem(0.10, Eigen::Affine3f(ids_pair[id_list[i]] * s->second).inverse(),
+//                                   "camera");
+
+
+        viewer.removeShape("arrow");
+        viewer.addArrow(pcl::PointXYZ(pose(0), pose(1), pose(2)),
+                        pcl::PointXYZ(0, 0, 0), 200, 20, 20, "arrow");
+
         viewer.spinOnce(1);
 
     }
@@ -331,6 +370,8 @@ void ArPoseFrame::ProcessImg(cv::Mat in) {
 
 
     cv::aruco::detectMarkers(in, dic_ptr_, corner_, ids_);//,para_ptr_);
+
+    cv::aruco::drawDetectedMarkers(in,corner_,ids_);
 
     if (ids_.size() > 0) {
         if (initial_id_ < 0) {
@@ -355,7 +396,6 @@ void ArPoseFrame::ProcessImg(cv::Mat in) {
             tids_ = ids_;
             vecs_mutex_.unlock();
 
-            cv::aruco::drawDetectedMarkers(in,in,ids_);
 
             for (int i(0); i < rvecs.size(); ++i) {
 
