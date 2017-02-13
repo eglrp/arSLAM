@@ -69,6 +69,8 @@
 
 #include <boost/thread/thread.hpp>
 
+#include <fstream>
+
 
 //#include "MYCH
 
@@ -108,6 +110,12 @@ public:
 
         std::thread btf(&ArPoseFrame::BuildTransform, this);
         btf.detach();
+
+
+        /*
+         *
+         */
+        out_log_.open("log_file.csv");
 
     }
 
@@ -173,6 +181,7 @@ protected:
 
 
 private:
+    std::ofstream out_log_;
 
 
 };
@@ -397,6 +406,8 @@ void ArPoseFrame::BuildTransform() {
             pose = Eigen::Vector3d(0,0,0);
         }
         current_pos_ = pose;
+
+        out_log_ << pose.transpose() << std::endl;
 //        viewer.removeCoordinateSystem("camera");
 //        viewer.addCoordinateSystem(0.10, Eigen::Affine3f(ids_pair[id_list[i]] * s->second).inverse(),
 //                                   "camera");
