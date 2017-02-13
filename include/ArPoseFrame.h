@@ -295,7 +295,8 @@ void ArPoseFrame::BuildTransform() {
 
 
 
-                                if (tmp_num > verify_num_ && is_extract_condition_ok) {
+                                if (tmp_num > verify_num_ &&
+                                        is_extract_condition_ok) {
                                     transform_map_.insert(std::make_pair(id_list[i], tmp));
 
 //                            viewer_.addMarker(tmp,id_list[i]);
