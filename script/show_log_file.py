@@ -13,10 +13,10 @@ from mpl_toolkits.mplot3d import Axes3D
 if __name__ == '__main__':
     data = np.loadtxt("./log_file.csv")
 
-    # plt.figure(1)
-    #
-    # plt.plot(data[:,0],data[:,1],'r-+')
-    # plt.grid(True)
+    plt.figure(1)
+
+    plt.plot(data[:,0],data[:,1],'r-+')
+    plt.grid(True)
     #
     # plt.show()
     # # plt.figure(2)

@@ -278,6 +278,8 @@ void ArPoseFrame::BuildTransform() {
                                  * 1.z-axis  vertically relative to horizontal plane
                                  *
                                  * 2.the origin of coordinates is in the x-y plane(z equal to zero).
+                                 *
+                                 * 3. new camera pose should be close to latest current_pose_
                                  */
 
                                 bool is_extract_condition_ok(true);
@@ -299,6 +301,15 @@ void ArPoseFrame::BuildTransform() {
                                 std::cout << "zero : " << src_zero.transpose() << std::endl;
                                 if (src_zero[2] > 0.03 || src_zero[2] < -0.03) {
                                     is_extract_condition_ok = false;
+                                }
+                                
+                                
+                                /// 3.
+                                Eigen::Vector3d the_pose(0,0,0);
+                                the_pose = tmp.inverse() * ids_pair[id_list[i]].inverse() * the_pose;
+                                if((the_pose-current_pos_).norm()>0.3)
+                                {
+                                    is_extract_condition_ok= false;
                                 }
 
 
