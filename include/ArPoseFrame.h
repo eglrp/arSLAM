@@ -507,7 +507,6 @@ Eigen::Affine3d ArPoseFrame::rt2Matrix(cv::Vec3d rvec, cv::Vec3d tvec) {
         transform_matrix(i, 3) = tvec(i);
     }
     return transform_matrix;
-
 }
 
 
