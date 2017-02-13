@@ -407,7 +407,11 @@ void ArPoseFrame::BuildTransform() {
         }
         current_pos_ = pose;
 
-        out_log_ << pose.transpose() << std::endl;
+        if(pose.norm() >0.1)
+        {
+            out_log_ << pose.transpose() << std::endl;
+
+        }
 //        viewer.removeCoordinateSystem("camera");
 //        viewer.addCoordinateSystem(0.10, Eigen::Affine3f(ids_pair[id_list[i]] * s->second).inverse(),
 //                                   "camera");
