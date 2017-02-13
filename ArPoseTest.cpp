@@ -12,6 +12,7 @@
 
 #include <ArPoseFrame.h>
 
+#include <FilterLib/TmpSimpleFilter.h>
 
 
 int main()
@@ -35,7 +36,7 @@ int main()
         cv::VideoWriter videoWriter("log.avi",0,30,cv::Size(1280,720),true);
 
 //    std::string log_file_name("./dataset/log1.avi");
-    std::string log_file_name("./locate_dataset/log2.avi");
+    std::string log_file_name("./locate_dataset/log3.avi");
     cv::VideoCapture capfile(log_file_name);
     while(capfile.isOpened())
     {

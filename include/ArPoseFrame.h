@@ -290,7 +290,7 @@ void ArPoseFrame::BuildTransform() {
 
                                 target_z = tmp * src_z;
 //                                std::cout << "target z :" << target_z.transpose() << std::endl;
-                                if (target_z[2] < 0.97) {
+                                if (target_z[2] < 0.96) {
                                     is_extract_condition_ok = false;
                                 }
 
@@ -299,15 +299,15 @@ void ArPoseFrame::BuildTransform() {
                                 src_zero = tmp * src_zero;
 
                                 std::cout << "zero : " << src_zero.transpose() << std::endl;
-                                if (src_zero[2] > 0.03 || src_zero[2] < -0.03) {
+                                if (src_zero[2] > 0.02 || src_zero[2] < -0.02) {
                                     is_extract_condition_ok = false;
                                 }
-                                
-                                
+
+
                                 /// 3.
                                 Eigen::Vector3d the_pose(0,0,0);
                                 the_pose = tmp.inverse() * ids_pair[id_list[i]].inverse() * the_pose;
-                                if((the_pose-current_pos_).norm()>0.3)
+                                if((the_pose-current_pos_).norm()>0.2)
                                 {
                                     is_extract_condition_ok= false;
                                 }
