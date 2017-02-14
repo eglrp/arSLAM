@@ -14,7 +14,7 @@
 #include "time_stamp.h"
 #include "MyError.h"
 
-#define TmpSimpleFilterDEBUG true
+#define TmpSimpleFilterDEBUG false
 
 class TmpSimpleFilter {
 
@@ -60,7 +60,7 @@ public:
      * @param particle_filter -1:do not change the particle_num ,N(>0):change the particle_num to N.
      * @return
      */
-    bool Resample(int resample_method , int particle_num );
+    bool Resample(int resample_method, int particle_num);
 
 
     /**
@@ -106,7 +106,9 @@ private:
 };
 
 TmpSimpleFilter::TmpSimpleFilter(int filter_type, Eigen::Vector3d initial_x, Eigen::Vector3d noise_sigma,
-                                 Eigen::Vector3d evaluation_sigma, int particle_number) {
+                                 Eigen::Vector3d evaluation_sigma, int particle_number) :
+        particles_(particle_number, 9),
+        probability_(particle_number, 1) {
     MYCHECK(TmpSimpleFilterDEBUG);
 
 
@@ -214,8 +216,14 @@ bool TmpSimpleFilter::Evaluation(std::vector<Eigen::Vector3d> guess_pose_list) {
 
 bool TmpSimpleFilter::Resample(int resample_method, int particle_num) {
     MYCHECK(TmpSimpleFilterDEBUG);
-    Eigen::MatrixXd tmp_particles(tmp_particles);
-    Eigen::MatrixXd tmp_probability(probability_);
+    Eigen::MatrixXd tmp_particles;//(particles_);
+    Eigen::MatrixXd tmp_probability;//(probability_);
+
+    tmp_particles.resize(particles_.rows(),particles_.cols());
+    tmp_probability.resize(probability_.rows(),probability_.cols());
+
+    tmp_particles = particles_;
+    tmp_probability = probability_;
 
     std::uniform_real_distribution<double> real_distribution(0,0.999999);
     for(int index(0);index<particles_.rows();++index)
@@ -226,10 +234,10 @@ bool TmpSimpleFilter::Resample(int resample_method, int particle_num) {
         while(score>0)
         {
             ++i;
-            score -= probability_(i);
+            score -= tmp_probability(i);
         }
 
-        if(i>tmp_particles.rows())
+        if(i>=tmp_particles.rows())
         {
             i = tmp_particles.rows()-1;
 

@@ -47,6 +47,8 @@ include_directories(
 #     ${PROJECT_SOURCE_DIR}/thirdparty/g2o
 # ${PROJECT_SOURCE_DIR}/thirdparty/g2o
         # /usr/include/suitesparse
+        ./FilterLib
+        ~/Cpp_Extent/Cpp_Extent
 
 )
 

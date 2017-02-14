@@ -139,16 +139,6 @@ public:
     Eigen::Affine3d rt2Matrix(cv::Vec3d rvec, cv::Vec3d tvec);
 
 
-    /** Error cod
-     *
-     */
-    TmpSimpleFilter tpf = TmpSimpleFilter(1,Eigen::Vector3d(0,0,0),
-    Eigen::Vector3d(0.2,0.2,0.2),Eigen::Vector3d(0.2,0.2,0.2),5000);
-
-
-    bool need_initial_pf = true;
-
-
 protected:
 
     void BuildTransform();
@@ -213,7 +203,13 @@ void ArPoseFrame::BuildTransform() {
 
     viewer.addCoordinateSystem(0.3);
 
-    //tpf.InitialState(Eigen::Vector3d(0,0,0));
+    TmpSimpleFilter tpf(1,Eigen::Vector3d(0,0,0),
+    Eigen::Vector3d(0.5,0.5,0.2),Eigen::Vector3d(0.2,0.2,0.2),5000);
+
+
+    bool need_initial(true);
+
+
     while (1) {
         vecs_mutex_.lock();
         if (tids_.size() > 0) {
@@ -303,7 +299,7 @@ void ArPoseFrame::BuildTransform() {
 
                                 target_z = tmp * src_z;
 //                                std::cout << "target z :" << target_z.transpose() << std::endl;
-                                if (target_z[2] < 0.96) {
+                                if (target_z[2] < 0.98) {
                                     is_extract_condition_ok = false;
                                 }
 
@@ -312,7 +308,7 @@ void ArPoseFrame::BuildTransform() {
                                 src_zero = tmp * src_zero;
 
                                 std::cout << "zero : " << src_zero.transpose() << std::endl;
-                                if (src_zero[2] > 0.02 || src_zero[2] < -0.02) {
+                                if (src_zero[2] > 0.04 || src_zero[2] < -0.04) {
                                     is_extract_condition_ok = false;
                                 }
 
@@ -366,13 +362,24 @@ void ArPoseFrame::BuildTransform() {
             Eigen::Vector3d tmp_pose(0, 0, 0);
             auto s = transform_map_.find(id_list[i]);
 
-//            pose =  ids_pair[id_list[i]] * s->second * tmp_pose;
-            tmp_pose = s->second.inverse() * ids_pair[id_list[i]].inverse() * tmp_pose;
+            if(s!= transform_map_.end())
+            {
+                //            pose =  ids_pair[id_list[i]] * s->second * tmp_pose;
+                tmp_pose = s->second.inverse() * ids_pair[id_list[i]].inverse() * tmp_pose;
 //            std::cout << "Pose:" << pose.transpose() << std::endl;
-            pose_list.push_back(tmp_pose);
-            score_list.push_back(0);
-
+                pose_list.push_back(tmp_pose);
+                score_list.push_back(0);
+            }else{
+                tmp_pose = s->second.inverse() * ids_pair[id_list[i]].inverse() * tmp_pose;
+////            std::cout << "Pose:" << pose.transpose() << std::endl;
+//                pose_list.push_back(tmp_pose);
+//                score_list.push_back(0);
+//                std::cout << tmp_pose << std::endl;
+            }
         }
+        if(pose_list.size() > 0)
+        std::cout << "pose list size : " << pose_list.size() << std::endl;
+
 
         /**
          * vote to similar pose.
@@ -410,7 +417,7 @@ void ArPoseFrame::BuildTransform() {
 
         }
 
-        if (all_num == 0) {
+        if (all_num == 0 && pose_list.size() > 1) {
             pose = Eigen::Vector3d(0, 0, 0);
 //            if(pose_list.size()>0)
 //            {
@@ -423,36 +430,60 @@ void ArPoseFrame::BuildTransform() {
 //                  << pose_list.size()  <<"is pose list size"
 //                  << std::endl;
 
+        /**
+         *  if only one pose in pose list
+         */
+         if(pose_list.size() == 1 && id_list[0] == initial_id_)
+         {
+             pose = pose_list[0];
+         }
+
 
         if(std::isnan(pose[2]))
         {
 //            pose[2] = current_pos_[2];
             pose = Eigen::Vector3d(0,0,0);
+            MYERROR("Pose is nan...");
         }
+        current_pos_ = pose;
 
-//        current_pos_ = pose;
-        if(need_initial_pf)
+        /**
+         * initial pf if
+         */
+        if(need_initial && pose.norm() > 0.5 && !isnan(pose.sum()))
         {
-            current_pos_ = pose;
-            tpf.InitialState(pose);
-            need_initial_pf = false;
-        }else{
-            tpf.StateTransmission();
-            tpf.Evaluation(pose_list);
-            current_pos_ = tpf.GetResult();
-            tpf.Resample(0,-1);
-        }
+            tpf.InitialState(current_pos_);
 
+            need_initial = false;
+        }
+        Eigen::Vector3d pf_pose;
+
+        if(!need_initial && pose.norm()>0.5&&!isnan(pose.sum()))
+        {
+            std::vector<Eigen::Vector3d> tmp_pose_list;
+            tmp_pose_list.push_back(pose);
+
+            tpf.StateTransmission();
+            tpf.Evaluation(tmp_pose_list);
+            pf_pose = tpf.GetResult();
+            tpf.Resample(0,-1);
+
+
+        }
 
         if(pose.norm() >0.1)
         {
-            out_log_ << pose.transpose() << std::endl;
+//            out_log_ << pose.transpose() << std::endl;
 
+            out_log_ << pf_pose.transpose() << std::endl;
         }
 //        viewer.removeCoordinateSystem("camera");
 //        viewer.addCoordinateSystem(0.10, Eigen::Affine3f(ids_pair[id_list[i]] * s->second).inverse(),
 //                                   "camera");
 
+//        viewer.removeShape("pf");
+//        viewer.addArrow(pcl::PointXYZ(pf_pose(0),pf_pose(1),pf_pose(2)),
+//        pcl::PointXYZ(0,0,0),20,200,200,"pf");
 
         viewer.removeShape("arrow");
         viewer.addArrow(pcl::PointXYZ(pose(0), pose(1), pose(2)),

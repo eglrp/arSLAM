@@ -19,10 +19,12 @@ int main()
 {
     bool record_video(false);
 
-//    cv::VideoCapture cap("/dev/video1");
+    cv::VideoCapture cap("/dev/video1");
+     cap.set(CV_CAP_PROP_FRAME_WIDTH,1920);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT,1080);
 //    cap.set(CV_CAP_PROP_FRAME_WIDTH,1280);
 //    cap.set(CV_CAP_PROP_FRAME_HEIGHT,720);
-//    cap.set(CV_CAP_OPENNI_QVGA_60HZ, 30.0);
+    cap.set(CV_CAP_OPENNI_QVGA_60HZ, 30.0);
 
     cv::Mat in;
 
@@ -36,17 +38,19 @@ int main()
         cv::VideoWriter videoWriter("log.avi",0,30,cv::Size(1280,720),true);
 
 //    std::string log_file_name("./dataset/log1.avi");
-    std::string log_file_name("./locate_dataset/log3.avi");
+    std::string log_file_name("./locate_dataset/log4.avi");
     cv::VideoCapture capfile(log_file_name);
     while(capfile.isOpened())
     {
-//        cap >> in;
-        capfile >>in;
+        cap >> in;
+//        capfile >>in;
+
+//        cv::cvtColor(in,in,CV_RGB2GRAY);
 
 
         if(in.empty())
         {
-            arPoseFrame.need_initial_pf = true;
+//            arPoseFrame.need_initial_pf = true;
             capfile.release();
             capfile.open(log_file_name);
             capfile >> in;
