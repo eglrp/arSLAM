@@ -12,7 +12,7 @@
 
 #include <ArPoseFrame.h>
 
-#include <FilterLib/TmpSimpleFilter.h>
+//#include <FilterLib/TmpSimpleFilter.h>
 
 
 int main()
@@ -46,6 +46,7 @@ int main()
 
         if(in.empty())
         {
+            arPoseFrame.need_initial_pf = true;
             capfile.release();
             capfile.open(log_file_name);
             capfile >> in;

@@ -75,6 +75,7 @@
 //#include "MYCH
 
 //#include "OwnViewer.h"
+#include "TmpSimpleFilter.h"
 
 
 
@@ -136,6 +137,16 @@ public:
      * @return
      */
     Eigen::Affine3d rt2Matrix(cv::Vec3d rvec, cv::Vec3d tvec);
+
+
+    /** Error cod
+     *
+     */
+    TmpSimpleFilter tpf = TmpSimpleFilter(1,Eigen::Vector3d(0,0,0),
+    Eigen::Vector3d(0.2,0.2,0.2),Eigen::Vector3d(0.2,0.2,0.2),5000);
+
+
+    bool need_initial_pf = true;
 
 
 protected:
@@ -201,6 +212,8 @@ void ArPoseFrame::BuildTransform() {
 
 
     viewer.addCoordinateSystem(0.3);
+
+    //tpf.InitialState(Eigen::Vector3d(0,0,0));
     while (1) {
         vecs_mutex_.lock();
         if (tids_.size() > 0) {
@@ -416,7 +429,20 @@ void ArPoseFrame::BuildTransform() {
 //            pose[2] = current_pos_[2];
             pose = Eigen::Vector3d(0,0,0);
         }
-        current_pos_ = pose;
+
+//        current_pos_ = pose;
+        if(need_initial_pf)
+        {
+            current_pos_ = pose;
+            tpf.InitialState(pose);
+            need_initial_pf = false;
+        }else{
+            tpf.StateTransmission();
+            tpf.Evaluation(pose_list);
+            current_pos_ = tpf.GetResult();
+            tpf.Resample(0,-1);
+        }
+
 
         if(pose.norm() >0.1)
         {
