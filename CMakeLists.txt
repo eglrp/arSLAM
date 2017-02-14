@@ -42,11 +42,10 @@ include_directories(
         /usr/include
         /usr/local/include
         ${CSPARSE_INCLUDE_DIR}
+                ${CSPARSE_INCLUDE_DIR}
         ${G2O_INCLUDE_DIR}
-        ~/Cpp_Extent/Cpp_Extent
-        ./FilterLib
-        #     ${PROJECT_SOURCE_DIR}/thirdparty/g2o
-        # ${PROJECT_SOURCE_DIR}/thirdparty/g2o
+#     ${PROJECT_SOURCE_DIR}/thirdparty/g2o
+# ${PROJECT_SOURCE_DIR}/thirdparty/g2o
         # /usr/include/suitesparse
 
 )
