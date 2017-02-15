@@ -37,14 +37,14 @@ public:
      * @param initial_state
      * @return
      */
-    bool InitialState(Eigen::Vector3d initial_state);
+    bool InitialState(Eigen::Vector3d initial_state,double time = -1.0);
 
 
     /**
      * State transmission.
      * @return
      */
-    bool StateTransmission();
+    bool StateTransmission(double time = -1.0);
 
 
     /**
@@ -135,13 +135,20 @@ TmpSimpleFilter::TmpSimpleFilter(int filter_type, Eigen::Vector3d initial_x, Eig
 }
 
 
-bool TmpSimpleFilter::InitialState(Eigen::Vector3d initial_state) {
+bool TmpSimpleFilter::InitialState(Eigen::Vector3d initial_state,
+                                   double time = -1) {
     MYCHECK(TmpSimpleFilterDEBUG);
    particles_.setZero();
    MYCHECK(TmpSimpleFilterDEBUG);
     probability_.setOnes();
     probability_ /= probability_.sum();
-    last_time_ = TimeStamp::now();
+
+   if(time < 0.0)
+   {
+       last_time_ = TimeStamp::now();
+   }else{
+       last_time_ = time;
+   }
     for(int i(0);i<particles_.rows();++i)
     {
         for(int j(0);j<3;++j)
@@ -153,9 +160,15 @@ bool TmpSimpleFilter::InitialState(Eigen::Vector3d initial_state) {
     return true;
 }
 
-bool TmpSimpleFilter::StateTransmission() {
+bool TmpSimpleFilter::StateTransmission(double time = -1) {
     MYCHECK(TmpSimpleFilterDEBUG);
-    double time_now = TimeStamp::now();
+    double time_now;// = TimeStamp::now();
+    if(time < -1)
+    {
+        time_now = TimeStamp::now();
+    }else{
+        time_now = time;
+    }
     double dt = time_now-last_time_;
     std::normal_distribution<> normal_distribution(0,noise_sigma_.mean());
 

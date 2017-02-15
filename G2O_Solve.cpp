@@ -161,10 +161,22 @@ int main() {
 
     g2o::VertexPlane *p = new g2o::VertexPlane();
     p->setId(plane_id);
-    p->setEstimate(g2o::Plane3D(Eigen::Vector4d(0,0,0,1)));
+    p->setEstimate(g2o::Plane3D(Eigen::Vector4d(0, 0, 0, 1)));
 
     globalOptimizer.addVertex(p);
 
+    typedef g2o::BlockSolver_6_3 SlamBlockSolver;
+    typedef g2o::LinearSolverCSparse<SlamBlockSolver::PoseMatrixType> SlamLinearSolver;
+
+    // 初始化求解器
+    SlamLinearSolver *linearSolver = new SlamLinearSolver();
+    linearSolver->setBlockOrdering(false);
+    SlamBlockSolver *blockSolver = new SlamBlockSolver(linearSolver);
+    g2o::OptimizationAlgorithmLevenberg *solver =
+            new g2o::OptimizationAlgorithmLevenberg(blockSolver);
+    globalOptimizer.setAlgorithm(solver);
+
+//    globalOptimizer.initializeOptimization();
 //    g2o::EdgeSE3PlaneSensorCalib *edgePlane = new g2o::EdgeSE3PlaneSensorCalib;
 //    edgePlane->vertices()[1] = globalOptimizer.vertex(initial_marker_id);
 //    edgePlane->vertices()[0] = globalOptimizer.vertex(plane_id);
@@ -271,44 +283,39 @@ int main() {
             /**
              * Add edge
              */
-             for(int i_ids(0);i_ids<ids.size();++i_ids)
-             {
-                 g2o::EdgeSE3* edge = new g2o::EdgeSE3();
-                 edge->vertices()[0] = globalOptimizer.vertex(current_frame_id);
-                 edge->vertices()[1] = globalOptimizer.vertex(ids[i_ids]);
+            for (int i_ids(0); i_ids < ids.size(); ++i_ids) {
+                g2o::EdgeSE3 *edge = new g2o::EdgeSE3();
+                edge->vertices()[0] = globalOptimizer.vertex(current_frame_id);
+                edge->vertices()[1] = globalOptimizer.vertex(ids[i_ids]);
 //                 edge->setRobustKernel()
-                     Eigen::Matrix<double, 6, 6> information = Eigen::Matrix< double, 6,6 >::Identity();
-                 information(0,0) = information(1,1) = information(2,2) = 100;
-                 information(3,3) = information(4,4) = information(5,5) = 100;
-                 edge->setInformation(information);
-                 Eigen::Isometry3d T = rt2Matrix(rvecs[i_ids],tvecs[i_ids]);
-                 edge->setMeasurement(T);
-                 globalOptimizer.addEdge(edge);
-             }
+                Eigen::Matrix<double, 6, 6> information = Eigen::Matrix<double, 6, 6>::Identity();
+                information(0, 0) = information(1, 1) = information(2, 2) = 100;
+                information(3, 3) = information(4, 4) = information(5, 5) = 100;
+                edge->setInformation(information);
+                Eigen::Isometry3d T = rt2Matrix(rvecs[i_ids], tvecs[i_ids]);
+                edge->setMeasurement(T);
+                globalOptimizer.addEdge(edge);
+            }
+            globalOptimizer.initializeOptimization(0);
 
+
+            globalOptimizer.optimize(30);
 
 
 
         }
-        std::cout << "final frame id :" << current_frame_id << std::endl;
-
-
-
-
-
-
 
         /**
          * Show image
          */
-//        cv::imshow(win_name, img);
-//        cv::waitKey(10);
+        cv::imshow(win_name, img);
+        cv::waitKey(10);
     }
-
+    std::cout << "final frame id :" << current_frame_id << std::endl;
     /**
      * Save g2o to file
      */
-     globalOptimizer.save("./save_graph.g2o");
+    globalOptimizer.save("./save_graph.g2o");
     return 0;
 
 }
