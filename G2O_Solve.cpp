@@ -90,6 +90,7 @@ int main() {
     added_id.push_back(initial_marker_id);
 
     int current_frame_id(1000);
+    int plane_id(100);
 
 
 
@@ -157,6 +158,24 @@ int main() {
     v->setEstimate(Eigen::Isometry3d::Identity());
     v->setFixed(true);
     globalOptimizer.addVertex(v);
+
+    g2o::VertexPlane *p = new g2o::VertexPlane();
+    p->setId(plane_id);
+    p->setEstimate(g2o::Plane3D(Eigen::Vector4d(0,0,0,1)));
+
+    globalOptimizer.addVertex(p);
+
+//    g2o::EdgeSE3PlaneSensorCalib *edgePlane = new g2o::EdgeSE3PlaneSensorCalib;
+//    edgePlane->vertices()[1] = globalOptimizer.vertex(initial_marker_id);
+//    edgePlane->vertices()[0] = globalOptimizer.vertex(plane_id);
+//    Eigen::Matrix4d information_plane;
+//    information_plane.setIdentity();
+//    information_plane *= 10.0;
+////    edgePlane->setInformation(information_plane);
+////    edgePlane->setInformation()
+////    edgePlane->setMeasurement(g2o::Vector4D(0,0,0,1));
+//    edgePlane->setMeasurement(g2o::Plane3D(Eigen::Vector4d(0,0,0,1)));
+//    globalOptimizer.addEdge(edgePlane);
 
 
     /**
@@ -229,6 +248,14 @@ int main() {
                     v->setEstimate(Eigen::Isometry3d::Identity());
                     globalOptimizer.addVertex(v);
 
+//                    g2o::EdgeSE3PlaneSensorCalib *ep = new g2o::EdgeSE3PlaneSensorCalib();
+//                    ep->vertices()[1] = globalOptimizer.vertex(ids[i_ids]);
+//                    ep->vertices()[0] = globalOptimizer.vertex(plane_id);
+////                    ep->setInformation(information_plane);
+////                    ep->setMeasurement(g2o::Vector4D(0,0,0,1));
+//                    ep->setMeasurement(g2o::Plane3D(Eigen::Vector3d(0,0,0,1)));
+//                    globalOptimizer.addEdge(ep);
+
                 }
             }
 
@@ -274,8 +301,8 @@ int main() {
         /**
          * Show image
          */
-        cv::imshow(win_name, img);
-        cv::waitKey(10);
+//        cv::imshow(win_name, img);
+//        cv::waitKey(10);
     }
 
     /**
