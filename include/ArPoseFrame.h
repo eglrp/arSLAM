@@ -82,7 +82,9 @@
 #include "g2o/core/factory.h"
 #include "g2o/core/optimization_algorithm_levenberg.h"
 #include "g2o/solvers/csparse/linear_solver_csparse.h"
-
+//#include "g2o/types/slam3d/edge_se3.h"
+//#include "g2o/types/slam3d/vertex_se3.h"
+#include "g2o/types/slam3d/types_slam3d.h"
 G2O_USE_TYPE_GROUP(slam3d);
 
 /**
@@ -124,6 +126,17 @@ public:
          */
         out_log_.open("log_file.csv");
 
+        /**
+         * G2O add new point.
+         */
+//         g2o::VertexSE3* v = new g2o::VertexSE3();
+//        v->setId(initial_id_);
+//        v->setEstimate(Eigen::Isometry3d::Identity());
+//        v->setFixed(true);
+//        globalOptimizer_.addVertex(v);
+//        globalOptimizer_.save("test.g2o");
+
+
     }
 
     /**
@@ -143,6 +156,9 @@ public:
      * @return
      */
     Eigen::Affine3d rt2Matrix(cv::Vec3d rvec, cv::Vec3d tvec);
+
+
+//    g2o::SparseOptimizer globalOptimizer_; //global optimizer
 
 
 protected:

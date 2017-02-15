@@ -88,5 +88,5 @@ add_executable(gwotest g2oTest.cpp)
 target_link_libraries(gwotest ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS})
 
 add_executable(G2O_Solve G2O_Solve.cpp)
-target_link_libraries(G2O_Solve ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS})
+target_link_libraries(G2O_Solve ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
