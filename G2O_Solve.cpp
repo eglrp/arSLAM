@@ -76,7 +76,7 @@ int main() {
     /**
      * Define
      */
-    std::string video_file_name("./locate_dataset_hd/log_test.mp4");
+    std::string video_file_name("./locate_dataset_hd/log_test2.mp4");
     std::string win_name("ShowTest");
 
     std::string intrinsic_matrix_file("./data/intrinsic_matrix.txt");
