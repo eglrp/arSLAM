@@ -42,7 +42,6 @@ include_directories(
         /usr/include
         /usr/local/include
         ${CSPARSE_INCLUDE_DIR}
-                ${CSPARSE_INCLUDE_DIR}
         ${G2O_INCLUDE_DIR}
 #     ${PROJECT_SOURCE_DIR}/thirdparty/g2o
 # ${PROJECT_SOURCE_DIR}/thirdparty/g2o
@@ -77,7 +76,7 @@ target_link_libraries(main ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 
 add_executable(ArPoseTest ArPoseTest.cpp)
-target_link_libraries(ArPoseTest ${OpenCV_LIBS} ${PCL_LIBRARIES})
+target_link_libraries(ArPoseTest ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 
 add_executable(VisualTest visualTest.cpp)
@@ -87,4 +86,7 @@ target_link_libraries(VisualTest ${OpenCV_LIBS} ${PCL_LIBRARIES})
 add_executable(gwotest g2oTest.cpp)
 #target_link_libraries(gwotest  ${OpenCV_LIBS} )
 target_link_libraries(gwotest ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS})
+
+add_executable(G2O_Solve G2O_Solve.cpp)
+target_link_libraries(G2O_Solve ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS})
 

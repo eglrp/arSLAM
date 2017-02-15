@@ -35,7 +35,7 @@ int main()
     ArPoseFrame arPoseFrame(11);
 
 
-        cv::VideoWriter videoWriter("log.avi",0,30,cv::Size(1280,720),true);
+        cv::VideoWriter videoWriter("log.avi",0,30,cv::Size(1920,1080),true);
 
 //    std::string log_file_name("./dataset/log1.avi");
     std::string log_file_name("./locate_dataset/log4.avi");
@@ -55,7 +55,7 @@ int main()
             capfile.open(log_file_name);
             capfile >> in;
         }
-//   videoWriter << in;
+   videoWriter << in;
 //        cv::imshow("test",in);
         arPoseFrame.ProcessImg(in);
         cv::waitKey(10);
