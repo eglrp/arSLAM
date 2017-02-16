@@ -104,8 +104,8 @@ int main() {
 
     TmpSimpleFilter tpf(1,
     Eigen::Vector3d(0,0,0),
-    Eigen::Vector3d(0.1,0.1,0.1),
-    Eigen::Vector3d(2.41,2.41,1.41),
+    Eigen::Vector3d(0.05,0.05,0.05),
+    Eigen::Vector3d(3.41,3.41,2.41),
     25000);
 
     bool tpf_need_initial(true);

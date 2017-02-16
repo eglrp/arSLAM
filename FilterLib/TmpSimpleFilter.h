@@ -205,7 +205,8 @@ bool TmpSimpleFilter::StateTransmission(double time ) {
         ////3.
         for(int j(0);j<3;++j)
         {
-            particles_(i,j) += dt * particles_(i,j+3) + 0.5 * dt * dt * particles_(i,j+6);
+            //particles_(i,j) += dt * particles_(i,j+3) + 0.5 * dt * dt * particles_(i,j+6);
+            particles_(i,j) += normal_distribution(e_);
         }
     }
     last_time_ = time_now;
