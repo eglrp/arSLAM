@@ -11,7 +11,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from array import array
 
 if __name__ == '__main__':
-    g2o_file = open("../after4.g2o")
+    g2o_file = open("../save_graph.g2o")
 
     odo_list = array("d")
     markers_list = array("d")
@@ -32,14 +32,20 @@ if __name__ == '__main__':
     odo = np.frombuffer(odo_list, dtype=np.float).reshape(-1, 3)
     marker = np.frombuffer(markers_list, dtype=np.float).reshape(-1, 3)
 
+
+    after_pf = np.loadtxt("../log.txt")
+
     fig = plt.figure()
     ax = fig.add_subplot(111,projection='3d')
     ax.plot(odo[:,0],odo[:,1],odo[:,2],'r-+')
     ax.plot(marker[:,0],marker[:,1],marker[:,2],'b*')
+    ax.plot(after_pf[:,0],after_pf[:,1],after_pf[:,2],'y-+')
+
 
 
     plt.figure(3)
     plt.plot(odo[:, 0], odo[:, 1], 'r*-')
     plt.plot(marker[:, 0], marker[:, 1], 'b+')
+    plt.plot(after_pf[:,0],after_pf[:,1],'y+-')
     plt.grid(True)
     plt.show()

@@ -28,8 +28,11 @@ public:
      * @param evaluation_sigma
      * @param particle_number
      */
-    TmpSimpleFilter(int filter_type, Eigen::Vector3d initial_x, Eigen::Vector3d noise_sigma,
-                    Eigen::Vector3d evaluation_sigma, int particle_number = 1000);
+    TmpSimpleFilter(int filter_type,
+                    Eigen::Vector3d initial_x,
+                    Eigen::Vector3d noise_sigma,
+                    Eigen::Vector3d evaluation_sigma,
+                    int particle_number = 1000);
 
 
     /**
@@ -136,7 +139,7 @@ TmpSimpleFilter::TmpSimpleFilter(int filter_type, Eigen::Vector3d initial_x, Eig
 
 
 bool TmpSimpleFilter::InitialState(Eigen::Vector3d initial_state,
-                                   double time = -1) {
+                                   double time ) {
     MYCHECK(TmpSimpleFilterDEBUG);
    particles_.setZero();
    MYCHECK(TmpSimpleFilterDEBUG);
@@ -160,7 +163,7 @@ bool TmpSimpleFilter::InitialState(Eigen::Vector3d initial_state,
     return true;
 }
 
-bool TmpSimpleFilter::StateTransmission(double time = -1) {
+bool TmpSimpleFilter::StateTransmission(double time ) {
     MYCHECK(TmpSimpleFilterDEBUG);
     double time_now;// = TimeStamp::now();
     if(time < -1)
@@ -192,6 +195,11 @@ bool TmpSimpleFilter::StateTransmission(double time = -1) {
         for(int j(3);j<6;++j)
         {
             particles_(i,j) += dt * particles_(i,j+3);
+
+            if(std::fabs(particles_(i,j)) > 10.0)
+            {
+                probability_(i) = 1e-20;
+            }
         }
 
         ////3.

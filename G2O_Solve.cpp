@@ -41,6 +41,9 @@
 
 G2O_USE_TYPE_GROUP(slam3d);
 
+
+#include "FilterLib/TmpSimpleFilter.h"
+
 /**
  * Useful function....
  *
@@ -82,6 +85,8 @@ int main() {
     std::string intrinsic_matrix_file("./data/intrinsic_matrix.txt");
     std::string distortion_matrix_file("./data/distortion_matrix.txt");
 
+    std::ofstream out_log("./log.txt");
+
     cv::namedWindow(win_name);
 
     int initial_marker_id(11);
@@ -91,6 +96,19 @@ int main() {
 
     int current_frame_id(1000);
     int plane_id(100);
+
+
+    /**
+     * PF initial
+     */
+
+    TmpSimpleFilter tpf(1,
+    Eigen::Vector3d(0,0,0),
+    Eigen::Vector3d(0.5,0.5,0.5),
+    Eigen::Vector3d(2.41,2.41,1.41),
+    15000);
+
+    bool tpf_need_initial(true);
 
 
 
@@ -229,6 +247,9 @@ int main() {
         );
 
 
+        /**
+         * Detected markers in this frame.
+         */
         if (ids.size() > 0) {
             rvecs.clear();
             tvecs.clear();
@@ -299,12 +320,48 @@ int main() {
             globalOptimizer.initializeOptimization(0);
 
 
-            globalOptimizer.optimize(30);
+            globalOptimizer.optimize(50);
+            if(tpf_need_initial)
+            {
+                globalOptimizer.optimize(200);
+            }
+
+
+            double * test_output = new double[10];
+            globalOptimizer.vertex(current_frame_id)->getEstimateData(test_output);
+            for(int i(0);i<10;++i)
+            {
+                std::cout << test_output[i];
+            }
+            std::cout << std::endl;
+
+            if(tpf_need_initial)
+            {
+
+                tpf.InitialState(Eigen::Vector3d(test_output[0],
+                test_output[1],
+                test_output[2]),
+                current_frame_id);
+                tpf_need_initial = false;
+            }else{
+                tpf.StateTransmission(current_frame_id);
+                std::vector<Eigen::Vector3d> guess_vec;
+                guess_vec.push_back(Eigen::Vector3d(test_output[0],test_output[1],test_output[2]));
+                tpf.Evaluation(guess_vec);
+                auto after_pf = tpf.GetResult();
+                tpf.Resample(1,1);
+                std::cout << after_pf.transpose() << std::endl;
+                out_log << after_pf.transpose() << std::endl;
+            }
+
+
+
 
 
 
 
         }
+
 
         /**
          * Show image
@@ -312,6 +369,7 @@ int main() {
         cv::imshow(win_name, img);
         cv::waitKey(10);
     }
+    out_log.close();
     std::cout << "final frame id :" << current_frame_id << std::endl;
     /**
      * Save g2o to file
