@@ -103,10 +103,10 @@ int main() {
      */
 
     TmpSimpleFilter tpf(1,
-    Eigen::Vector3d(0,0,0),
-    Eigen::Vector3d(0.05,0.05,0.05),
-    Eigen::Vector3d(3.41,3.41,2.41),
-    25000);
+                        Eigen::Vector3d(0,0,0),
+                        Eigen::Vector3d(0.05,0.05,0.05),
+                        Eigen::Vector3d(3.41,3.41,2.41),
+                        5000);
 
     bool tpf_need_initial(true);
 
@@ -213,10 +213,12 @@ int main() {
      */
 
     std::cout << "Begin main loop" << std::endl;
+    double time_begin = TimeStamp::now();
     while (true) {
         /**
          * Read image
          */
+        time_begin = TimeStamp::now();
         cv::Mat img;
 //        cap.read(img);
         cap >> img;
@@ -320,7 +322,7 @@ int main() {
             globalOptimizer.initializeOptimization(0);
 
 
-            globalOptimizer.optimize(50);
+            globalOptimizer.optimize(10);
             if(tpf_need_initial)
             {
                 globalOptimizer.optimize(200);
@@ -367,7 +369,9 @@ int main() {
          * Show image
          */
         cv::imshow(win_name, img);
-        cv::waitKey(10);
+        cv::waitKey(1);
+        globalOptimizer.optimize(30);
+        std::cout << "use time :  " << TimeStamp::now() - time_begin << std::endl;
     }
     out_log.close();
     std::cout << "final frame id :" << current_frame_id << std::endl;
