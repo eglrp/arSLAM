@@ -327,6 +327,7 @@ int main() {
             {
                 globalOptimizer.optimize(200);
             }
+            std::cout << " time use before first time optimize :" << TimeStamp::now() - time_begin << std::endl;
 
 
             double * test_output = new double[10];
@@ -336,6 +337,7 @@ int main() {
                 std::cout << test_output[i];
             }
             std::cout << std::endl;
+            std::cout << " time use before pf :" << TimeStamp::now() - time_begin << std::endl;
 
             if(tpf_need_initial)
             {
@@ -357,19 +359,14 @@ int main() {
             }
 
 
-
-
-
-
-
         }
-
 
         /**
          * Show image
          */
         cv::imshow(win_name, img);
         cv::waitKey(1);
+        std::cout << " used time before optimize :" << TimeStamp::now() - time_begin << std::endl;
         globalOptimizer.optimize(30);
         std::cout << "use time :  " << TimeStamp::now() - time_begin << std::endl;
     }
