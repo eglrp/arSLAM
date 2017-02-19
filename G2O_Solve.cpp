@@ -86,6 +86,7 @@ int main() {
     std::string distortion_matrix_file("./data/distortion_matrix.txt");
 
     std::ofstream out_log("./log.txt");
+    std::ofstream time_use_log("./time_use_log.txt");
 
     cv::namedWindow(win_name);
 
@@ -96,6 +97,8 @@ int main() {
 
     int current_frame_id(1000);
     int plane_id(100);
+
+    std::map<int,std::vector<g2o::EdgeSE3*>> edgen_vec_map;
 
 
     /**
@@ -272,6 +275,8 @@ int main() {
                                     distortion_matrix_,
                                     rvecs[i], tvecs[i], real_length);
             }
+
+            time_use_log << TimeStamp::now() - time_begin << " ";
             /**
              * Add vertex(markers id）
              */
@@ -311,6 +316,7 @@ int main() {
                 edge->vertices()[0] = globalOptimizer.vertex(current_frame_id);
                 edge->vertices()[1] = globalOptimizer.vertex(ids[i_ids]);
 //                 edge->setRobustKernel()
+
                 Eigen::Matrix<double, 6, 6> information = Eigen::Matrix<double, 6, 6>::Identity();
                 information(0, 0) = information(1, 1) = information(2, 2) = 100;
                 information(3, 3) = information(4, 4) = information(5, 5) = 100;
@@ -319,15 +325,30 @@ int main() {
                 edge->setMeasurement(T);
                 globalOptimizer.addEdge(edge);
             }
+            if(current_frame_id-1000 > 30)
+            {
+//                globalOptimizer.vertex(current_frame_id-20)->setFixed(true);
+
+//                globalOptimizer.removeVertex(globalOptimizer.vertex(current_frame_id-29),
+//                                             false);
+//                globalOptimizer.removeEdge(globalOptimizer.e)
+                g2o::HyperGraph::VertexSet v_set;
+                v_set.insert(globalOptimizer.vertex(current_frame_id-29));
+                MYCHECK(1);
+                globalOptimizer.setFixed(v_set,true);
+                MYCHECK(2);
+//                globalOptimizer.
+            }
             globalOptimizer.initializeOptimization(0);
-
-
+            time_use_log << TimeStamp::now() - time_begin << " ";
+            std::cout << " time use before first time optimize :" << TimeStamp::now() - time_begin << std::endl;
             globalOptimizer.optimize(10);
+
             if(tpf_need_initial)
             {
                 globalOptimizer.optimize(200);
             }
-            std::cout << " time use before first time optimize :" << TimeStamp::now() - time_begin << std::endl;
+
 
 
             double * test_output = new double[10];
@@ -338,7 +359,7 @@ int main() {
             }
             std::cout << std::endl;
             std::cout << " time use before pf :" << TimeStamp::now() - time_begin << std::endl;
-
+            time_use_log << TimeStamp::now() - time_begin << " ";
             if(tpf_need_initial)
             {
 
@@ -357,18 +378,19 @@ int main() {
                 std::cout << after_pf.transpose() << std::endl;
                 out_log << after_pf.transpose() << std::endl;
             }
-
+            time_use_log << TimeStamp::now() - time_begin << std::endl;
 
         }
 
         /**
          * Show image
          */
-        cv::imshow(win_name, img);
-        cv::waitKey(1);
+//        cv::imshow(win_name, img);
+//        cv::waitKey(1);
         std::cout << " used time before optimize :" << TimeStamp::now() - time_begin << std::endl;
         globalOptimizer.optimize(30);
         std::cout << "use time :  " << TimeStamp::now() - time_begin << std::endl;
+        //time_use_log << TimeStamp::now() - time_begin << std::endl;
     }
     out_log.close();
     std::cout << "final frame id :" << current_frame_id << std::endl;
