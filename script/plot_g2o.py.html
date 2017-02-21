@@ -1,0 +1,60 @@
+<html><head>
+<title>./script/plot_g2o.py</title>
+<meta name="Generator" content="htmlizer/[twisted, version 16.4.1]" />
+<link rel="alternate" href="./script/plot_g2o.py" type="text/x-python" />
+
+</head>
+<body>
+<pre><span class="py-src-comment">#!/usr/bin/env python</span>
+<span class="py-src-comment"># coding=utf-8</span>
+<span class="py-src-comment"># created by steve 17-2-15 下午1:51</span>
+
+<span class="py-src-keyword">import</span> <span class="py-src-variable">numpy</span> <span class="py-src-keyword">as</span> <span class="py-src-variable">np</span>
+<span class="py-src-keyword">import</span> <span class="py-src-variable">scipy</span> <span class="py-src-keyword">as</span> <span class="py-src-variable">sp</span>
+<span class="py-src-keyword">import</span> <span class="py-src-variable">matplotlib</span>.<span class="py-src-variable">pyplot</span> <span class="py-src-keyword">as</span> <span class="py-src-variable">plt</span>
+
+<span class="py-src-keyword">from</span> <span class="py-src-variable">mpl_toolkits</span>.<span class="py-src-variable">mplot3d</span> <span class="py-src-keyword">import</span> <span class="py-src-variable">Axes3D</span>
+
+<span class="py-src-keyword">from</span> <span class="py-src-variable">array</span> <span class="py-src-keyword">import</span> <span class="py-src-variable">array</span>
+
+<span class="py-src-keyword">if</span> <span class="py-src-variable">__name__</span> == <span class="py-src-string">'__main__'</span>:
+    <span class="py-src-variable">g2o_file</span> = <span class="py-src-variable">open</span>(<span class="py-src-string">"../save_graph.g2o"</span>)
+
+    <span class="py-src-variable">odo_list</span> = <span class="py-src-variable">array</span>(<span class="py-src-string">"d"</span>)
+    <span class="py-src-variable">markers_list</span> = <span class="py-src-variable">array</span>(<span class="py-src-string">"d"</span>)
+
+    <span class="py-src-keyword">for</span> <span class="py-src-variable">line</span> <span class="py-src-keyword">in</span> <span class="py-src-variable">g2o_file</span>:
+        <span class="py-src-keyword">if</span> <span class="py-src-string">'VERTEX_SE3'</span> <span class="py-src-keyword">in</span> <span class="py-src-variable">line</span>:
+            <span class="py-src-variable">id</span> = <span class="py-src-variable">line</span>.<span class="py-src-variable">split</span>(<span class="py-src-string">' '</span>)[<span class="py-src-number">1</span>]
+            <span class="py-src-variable">id</span> = <span class="py-src-variable">float</span>(<span class="py-src-variable">id</span>)
+            <span class="py-src-keyword">if</span> <span class="py-src-variable">id</span> &gt; <span class="py-src-number">1000</span>:
+                <span class="py-src-variable">odo_list</span>.<span class="py-src-variable">append</span>(<span class="py-src-variable">float</span>(<span class="py-src-variable">line</span>.<span class="py-src-variable">split</span>(<span class="py-src-string">' '</span>)[<span class="py-src-number">2</span>]))
+                <span class="py-src-variable">odo_list</span>.<span class="py-src-variable">append</span>(<span class="py-src-variable">float</span>(<span class="py-src-variable">line</span>.<span class="py-src-variable">split</span>(<span class="py-src-string">' '</span>)[<span class="py-src-number">3</span>]))
+                <span class="py-src-variable">odo_list</span>.<span class="py-src-variable">append</span>(<span class="py-src-variable">float</span>(<span class="py-src-variable">line</span>.<span class="py-src-variable">split</span>(<span class="py-src-string">' '</span>)[<span class="py-src-number">4</span>]))
+            <span class="py-src-keyword">if</span> <span class="py-src-variable">id</span> &gt; <span class="py-src-number">0</span> <span class="py-src-keyword">and</span> <span class="py-src-variable">id</span> &lt; <span class="py-src-number">1000</span>:
+                <span class="py-src-variable">markers_list</span>.<span class="py-src-variable">append</span>(<span class="py-src-variable">float</span>(<span class="py-src-variable">line</span>.<span class="py-src-variable">split</span>(<span class="py-src-string">' '</span>)[<span class="py-src-number">2</span>]))
+                <span class="py-src-variable">markers_list</span>.<span class="py-src-variable">append</span>(<span class="py-src-variable">float</span>(<span class="py-src-variable">line</span>.<span class="py-src-variable">split</span>(<span class="py-src-string">' '</span>)[<span class="py-src-number">3</span>]))
+                <span class="py-src-variable">markers_list</span>.<span class="py-src-variable">append</span>(<span class="py-src-variable">float</span>(<span class="py-src-variable">line</span>.<span class="py-src-variable">split</span>(<span class="py-src-string">' '</span>)[<span class="py-src-number">4</span>]))
+
+    <span class="py-src-variable">odo</span> = <span class="py-src-variable">np</span>.<span class="py-src-variable">frombuffer</span>(<span class="py-src-variable">odo_list</span>, <span class="py-src-variable">dtype</span>=<span class="py-src-variable">np</span>.<span class="py-src-variable">float</span>).<span class="py-src-variable">reshape</span>(-<span class="py-src-number">1</span>, <span class="py-src-number">3</span>)
+    <span class="py-src-variable">marker</span> = <span class="py-src-variable">np</span>.<span class="py-src-variable">frombuffer</span>(<span class="py-src-variable">markers_list</span>, <span class="py-src-variable">dtype</span>=<span class="py-src-variable">np</span>.<span class="py-src-variable">float</span>).<span class="py-src-variable">reshape</span>(-<span class="py-src-number">1</span>, <span class="py-src-number">3</span>)
+
+
+    <span class="py-src-variable">after_pf</span> = <span class="py-src-variable">np</span>.<span class="py-src-variable">loadtxt</span>(<span class="py-src-string">"../log.txt"</span>)
+
+    <span class="py-src-variable">fig</span> = <span class="py-src-variable">plt</span>.<span class="py-src-variable">figure</span>()
+    <span class="py-src-variable">ax</span> = <span class="py-src-variable">fig</span>.<span class="py-src-variable">add_subplot</span>(<span class="py-src-number">111</span>,<span class="py-src-variable">projection</span>=<span class="py-src-string">'3d'</span>)
+    <span class="py-src-variable">ax</span>.<span class="py-src-variable">plot</span>(<span class="py-src-variable">odo</span>[:,<span class="py-src-number">0</span>],<span class="py-src-variable">odo</span>[:,<span class="py-src-number">1</span>],<span class="py-src-variable">odo</span>[:,<span class="py-src-number">2</span>],<span class="py-src-string">'r-+'</span>)
+    <span class="py-src-variable">ax</span>.<span class="py-src-variable">plot</span>(<span class="py-src-variable">marker</span>[:,<span class="py-src-number">0</span>],<span class="py-src-variable">marker</span>[:,<span class="py-src-number">1</span>],<span class="py-src-variable">marker</span>[:,<span class="py-src-number">2</span>],<span class="py-src-string">'b*'</span>)
+    <span class="py-src-variable">ax</span>.<span class="py-src-variable">plot</span>(<span class="py-src-variable">after_pf</span>[:,<span class="py-src-number">0</span>],<span class="py-src-variable">after_pf</span>[:,<span class="py-src-number">1</span>],<span class="py-src-variable">after_pf</span>[:,<span class="py-src-number">2</span>],<span class="py-src-string">'y-+'</span>)
+
+
+
+    <span class="py-src-variable">plt</span>.<span class="py-src-variable">figure</span>(<span class="py-src-number">3</span>)
+    <span class="py-src-variable">plt</span>.<span class="py-src-variable">plot</span>(<span class="py-src-variable">odo</span>[:, <span class="py-src-number">0</span>], <span class="py-src-variable">odo</span>[:, <span class="py-src-number">1</span>], <span class="py-src-string">'r*-'</span>)
+    <span class="py-src-variable">plt</span>.<span class="py-src-variable">plot</span>(<span class="py-src-variable">marker</span>[:, <span class="py-src-number">0</span>], <span class="py-src-variable">marker</span>[:, <span class="py-src-number">1</span>], <span class="py-src-string">'b+'</span>)
+    <span class="py-src-variable">plt</span>.<span class="py-src-variable">plot</span>(<span class="py-src-variable">after_pf</span>[:,<span class="py-src-number">0</span>],<span class="py-src-variable">after_pf</span>[:,<span class="py-src-number">1</span>],<span class="py-src-string">'y+-'</span>)
+    <span class="py-src-variable">plt</span>.<span class="py-src-variable">grid</span>(<span class="py-src-variable">True</span>)
+    <span class="py-src-variable">plt</span>.<span class="py-src-variable">show</span>()
+</pre>
+</body>

@@ -325,20 +325,32 @@ int main() {
                 edge->setMeasurement(T);
                 globalOptimizer.addEdge(edge);
             }
-            if(current_frame_id-1000 > 30)
-            {
-//                globalOptimizer.vertex(current_frame_id-20)->setFixed(true);
 
-//                globalOptimizer.removeVertex(globalOptimizer.vertex(current_frame_id-29),
-//                                             false);
-//                globalOptimizer.removeEdge(globalOptimizer.e)
-                g2o::HyperGraph::VertexSet v_set;
-                v_set.insert(globalOptimizer.vertex(current_frame_id-29));
-                MYCHECK(1);
-                globalOptimizer.setFixed(v_set,true);
-                MYCHECK(2);
-//                globalOptimizer.
-            }
+//            if(current_frame_id-1000 > 30)
+//            {
+////                globalOptimizer.vertex(current_frame_id-20)->setFixed(true);
+//
+////                globalOptimizer.removeVertex(globalOptimizer.vertex(current_frame_id-29),
+////                                             false);
+////                globalOptimizer.removeEdge(globalOptimizer.e)
+//                globalOptimizer.setVerbose(true);
+//                g2o::HyperGraph::VertexContainer v_set;
+////                v_set.insert(globalOptimizer.vertex(current_frame_id-29));
+//                v_set.insert(v_set.end(),globalOptimizer.vertex(current_frame_id-10));
+//                MYCHECK(1);
+//                //globalOptimizer.pop(v_set);
+////                if(globalOptimizer.removeVertex(globalOptimizer.vertex(current_frame_id-29)))
+////                {
+////                    std::cout << "removed vertex" << current_frame_id -29 << std::endl;
+////                }else{
+////                    std::cout << "removed vertex" << current_frame_id -29 << std::endl;
+////                };
+//
+////                globalOptimizer.setFixed(v_set,true);
+//                MYCHECK(2);
+////                globalOptimizer.
+//            }
+
             globalOptimizer.initializeOptimization(0);
             time_use_log << TimeStamp::now() - time_begin << " ";
             std::cout << " time use before first time optimize :" << TimeStamp::now() - time_begin << std::endl;
