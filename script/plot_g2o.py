@@ -11,7 +11,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from array import array
 
 if __name__ == '__main__':
-    g2o_file = open("../save_graph.g2o")
+    g2o_file = open("../result1")
 
     odo_list = array("d")
     markers_list = array("d")

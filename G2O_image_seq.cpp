@@ -100,7 +100,7 @@ int main() {
 
     std::map<int,std::vector<g2o::EdgeSE3*>> edgen_vec_map;
 
-    std::string data_dir("./data1/file_name.txt");
+    std::string data_dir("./data2/");
     std::ifstream name_file(data_dir+"file_name.txt");
 
 
@@ -366,10 +366,10 @@ int main() {
 ////                globalOptimizer.
 //            }
 
-            globalOptimizer.initializeOptimization(0);
+            //globalOptimizer.initializeOptimization(0);
             time_use_log << TimeStamp::now() - time_begin << " ";
             std::cout << " time use before first time optimize :" << TimeStamp::now() - time_begin << std::endl;
-            globalOptimizer.optimize(10);
+//            globalOptimizer.optimize(10);
 
             if(tpf_need_initial)
             {
@@ -415,7 +415,7 @@ int main() {
         cv::imshow(win_name, img);
         cv::waitKey(1);
         std::cout << " used time before optimize :" << TimeStamp::now() - time_begin << std::endl;
-        globalOptimizer.optimize(30);
+//        globalOptimizer.optimize(30);
         std::cout << "use time :  " << TimeStamp::now() - time_begin << std::endl;
         //time_use_log << TimeStamp::now() - time_begin << std::endl;
     }
