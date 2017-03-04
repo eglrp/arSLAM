@@ -302,6 +302,7 @@ int main() {
                     v->setId(ids[i_ids]);
                     v->setEstimate(Eigen::Isometry3d::Identity());
                     globalOptimizer.addVertex(v);
+//                    globalOptimizer.
 
 //                    g2o::EdgeSE3PlaneSensorCalib *ep = new g2o::EdgeSE3PlaneSensorCalib();
 //                    ep->vertices()[1] = globalOptimizer.vertex(ids[i_ids]);
