@@ -129,7 +129,7 @@ int main() {
      * Load Aruco parameter
      */
 
-    double real_length(0.199);
+    double real_length(0.288);
     std::vector<cv::Vec3d> rvecs, tvecs;
     std::vector<int> ids;
     std::vector<std::vector<cv::Point2f>> corner;
