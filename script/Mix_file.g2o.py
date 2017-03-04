@@ -9,8 +9,9 @@ if __name__ == '__main__':
         # base file for compute pose of tag(ar code )
         base_file_list = list()
         base_file_list.append("../data1.g2o")
+        base_file_list.append("../data2_single.g2o")
 
-        target_file_name="../data2_single.g2o"
+        target_file_name="../data3_single.g2o"
         target_file = open(target_file_name)
         tag_min_id = 10
         tag_max_id = 80
@@ -55,7 +56,7 @@ if __name__ == '__main__':
                               line,'\n',tmp_line)
                         vertex_list.append(tmp_line)
                 if 'EDGE_SE3' in line:
-                    if int(line.split(' ')[1]) > 1000:
+                    if int(line.split(' ')[1]) > 1000 or True:
                         the_tag_id = int(line.split(' ')[1])
                         the_tag_id += tag_offset
 

@@ -76,7 +76,7 @@ add_executable(main main.cpp)
 target_link_libraries(main ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 
-add_executable(ArPoseTest ArPoseTest.cpp)
+add_executable(ArPoseTest ArPoseTest.cpp OwnEdge/Z_zero_edge.cpp OwnEdge/Z_zero_edge.h random_test.cpp)
 target_link_libraries(ArPoseTest ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 
@@ -88,9 +88,14 @@ add_executable(gwotest g2oTest.cpp)
 #target_link_libraries(gwotest  ${OpenCV_LIBS} )
 target_link_libraries(gwotest ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS})
 
-add_executable(G2O_Solve G2O_Solve.cpp)
+add_executable(G2O_Solve G2O_Solve.cpp OwnEdge/Z_zero_edge.cpp OwnEdge/Z_zero_edge.h)
 target_link_libraries(G2O_Solve ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 add_executable(G2O_image_seq G2O_image_seq.cpp)
 target_link_libraries(G2O_image_seq ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS} ${PCL_LIBRARIES})
+
+
+add_executable(rnd_test random_test.cpp)
+target_link_libraries(rnd_test ${G2O_LIBS})
+#target
 

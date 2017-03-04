@@ -100,7 +100,7 @@ int main() {
 
     std::map<int,std::vector<g2o::EdgeSE3*>> edgen_vec_map;
 
-    std::string data_dir("./data1/");
+    std::string data_dir("./data3/");
     std::ifstream name_file(data_dir+"file_name.txt");
 
 
