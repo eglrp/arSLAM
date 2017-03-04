@@ -46,6 +46,6 @@ if __name__ == '__main__':
     plt.figure(3)
     plt.plot(odo[:, 0], odo[:, 1], 'r*-')
     plt.plot(marker[:, 0], marker[:, 1], 'b+')
-    plt.plot(after_pf[:,0],after_pf[:,1],'y+-')
+    # plt.plot(after_pf[:,0],after_pf[:,1],'y+-')
     plt.grid(True)
     plt.show()
