@@ -11,7 +11,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from array import array
 
 if __name__ == '__main__':
-    g2o_file = open("../result1")
+    g2o_file = open("../data1.g2o")
 
     odo_list = array("d")
     markers_list = array("d")
@@ -20,7 +20,7 @@ if __name__ == '__main__':
         if 'VERTEX_SE3' in line:
             id = line.split(' ')[1]
             id = float(id)
-            if id > 1000:
+            if 10000 > id > 1000:
                 odo_list.append(float(line.split(' ')[2]))
                 odo_list.append(float(line.split(' ')[3]))
                 odo_list.append(float(line.split(' ')[4]))
