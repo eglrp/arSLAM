@@ -8,6 +8,10 @@
 #include "omp.h"
 
 #include <random>
+
+#include <boost/asio.hpp>
+
+
 int main()
 {
     std::default_random_engine e(0);
@@ -18,5 +22,7 @@ int main()
     {
         printf("rnd : %f\n",rd(e));
     }
+
+//    boost::asio::
 }
 

@@ -87,6 +87,7 @@ int main() {
 
     std::ofstream out_log("./log.txt");
     std::ofstream time_use_log("./time_use_log.txt");
+    std::ofstream id2time_log("./id2timelog.txt");
 
     cv::namedWindow(win_name);
 
@@ -100,7 +101,7 @@ int main() {
 
     std::map<int,std::vector<g2o::EdgeSE3*>> edgen_vec_map;
 
-    std::string data_dir("./data3/");
+    std::string data_dir("/home/steve/Data/cvdata/");
     std::ifstream name_file(data_dir+"file_name.txt");
 
 
@@ -234,7 +235,13 @@ int main() {
 
         std::string the_jpg_name;
         name_file >> the_jpg_name;
+        double the_jpg_time(0.0);
+        int ta,tb;
+        ta = the_jpg_name.find("_log");
+        tb = the_jpg_name.find(".jpg");
+        the_jpg_time = atof(the_jpg_name.substr(ta+4,tb-ta-4).c_str());
         std::cout << "jpg name : " << the_jpg_name << std::endl;
+
         img = cv::imread(data_dir+the_jpg_name);
 
         current_frame_id++;
@@ -323,6 +330,7 @@ int main() {
             v->setId(current_frame_id);
             v->setEstimate(Eigen::Isometry3d::Identity());
             globalOptimizer.addVertex(v);
+            id2time_log << the_jpg_time <<" " << current_frame_id << std::endl;
 
             /**
              * Add edge
@@ -374,7 +382,7 @@ int main() {
 
             if(tpf_need_initial)
             {
-                globalOptimizer.optimize(200);
+//                globalOptimizer.optimize(200);
             }
 
 
@@ -388,24 +396,24 @@ int main() {
             std::cout << std::endl;
             std::cout << " time use before pf :" << TimeStamp::now() - time_begin << std::endl;
             time_use_log << TimeStamp::now() - time_begin << " ";
-            if(tpf_need_initial)
-            {
-
-                tpf.InitialState(Eigen::Vector3d(test_output[0],
-                                                 test_output[1],
-                                                 test_output[2]),
-                                 current_frame_id);
-                tpf_need_initial = false;
-            }else{
-                tpf.StateTransmission(current_frame_id);
-                std::vector<Eigen::Vector3d> guess_vec;
-                guess_vec.push_back(Eigen::Vector3d(test_output[0],test_output[1],test_output[2]));
-                tpf.Evaluation(guess_vec);
-                auto after_pf = tpf.GetResult();
-                tpf.Resample(1,1);
-                std::cout << after_pf.transpose() << std::endl;
-                out_log << after_pf.transpose() << std::endl;
-            }
+//            if(tpf_need_initial)
+//            {
+//
+//                tpf.InitialState(Eigen::Vector3d(test_output[0],
+//                                                 test_output[1],
+//                                                 test_output[2]),
+//                                 current_frame_id);
+//                tpf_need_initial = false;
+//            }else{
+//                tpf.StateTransmission(current_frame_id);
+//                std::vector<Eigen::Vector3d> guess_vec;
+//                guess_vec.push_back(Eigen::Vector3d(test_output[0],test_output[1],test_output[2]));
+//                tpf.Evaluation(guess_vec);
+//                auto after_pf = tpf.GetResult();
+//                tpf.Resample(1,1);
+//                std::cout << after_pf.transpose() << std::endl;
+//                out_log << after_pf.transpose() << std::endl;
+//            }
             time_use_log << TimeStamp::now() - time_begin << std::endl;
 
         }
@@ -421,11 +429,12 @@ int main() {
         //time_use_log << TimeStamp::now() - time_begin << std::endl;
     }
     out_log.close();
+    id2time_log.close();
     std::cout << "final frame id :" << current_frame_id << std::endl;
     /**
      * Save g2o to file
      */
-    globalOptimizer.save("./save_graph.g2o");
+    globalOptimizer.save( "。/save_graph.g2o");
     return 0;
 
 }
