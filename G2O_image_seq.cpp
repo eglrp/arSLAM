@@ -434,7 +434,7 @@ int main() {
     /**
      * Save g2o to file
      */
-    globalOptimizer.save( "。/save_graph.g2o");
+    globalOptimizer.save( (data_dir+"./save_graph.g2o").c_str());
     return 0;
 
 }
