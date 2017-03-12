@@ -88,6 +88,7 @@ int main() {
     std::ofstream out_log("./log.txt");
     std::ofstream time_use_log("./time_use_log.txt");
     std::ofstream id2time_log("./id2timelog.txt");
+    id2time_log.precision(15);
 
     cv::namedWindow(win_name);
 
