@@ -62,6 +62,7 @@ if __name__ == '__main__':
 
     # time_pose = open('../time2pose.txt')
     time_pose = np.zeros([odo.shape[0],4])
+
     tp_index = 0
 
     for line in time_log.readlines():
