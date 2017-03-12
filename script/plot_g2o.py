@@ -11,35 +11,48 @@ from mpl_toolkits.mplot3d import Axes3D
 from array import array
 
 if __name__ == '__main__':
-    g2o_file = open("../mix.g2o")
+    g2o_file = open("../Save1.g2o")
 
     odo_list = array("d")
+    odo_id = array("d")
     markers_list = array("d")
+
+    tag_array = np.zeros([4,3])
 
     for line in g2o_file:
         if 'VERTEX_SE3' in line:
             id = line.split(' ')[1]
             id = float(id)
-            if 10000 > id > 1000:
+            if 10000000 > id > 1000:
                 odo_list.append(float(line.split(' ')[2]))
                 odo_list.append(float(line.split(' ')[3]))
                 odo_list.append(float(line.split(' ')[4]))
+                odo_id.append(id)
             if id > 0 and id < 1000:
                 markers_list.append(float(line.split(' ')[2]))
                 markers_list.append(float(line.split(' ')[3]))
                 markers_list.append(float(line.split(' ')[4]))
+                if (id-12) < 3:
+                    tag_array[int(id-12),0] = float(line.split(' ')[2])
+                    tag_array[int(id-12),1] = float(line.split(' ')[3])
+                    tag_array[int(id-12),2] = float(line.split(' ')[4])
+
 
     odo = np.frombuffer(odo_list, dtype=np.float).reshape(-1, 3)
     marker = np.frombuffer(markers_list, dtype=np.float).reshape(-1, 3)
 
 
-    after_pf = np.loadtxt("../log.txt")
+    # after_pf = np.loadtxt("../log.txt")
 
     fig = plt.figure()
     ax = fig.add_subplot(111,projection='3d')
     ax.plot(odo[:,0],odo[:,1],odo[:,2],'r-+')
     ax.plot(marker[:,0],marker[:,1],marker[:,2],'b*')
-    ax.plot(after_pf[:,0],after_pf[:,1],after_pf[:,2],'y-+')
+    ax.plot(tag_array[:,0],tag_array[:,1],tag_array[:,2],'D')
+    # ax.plot(after_pf[:,0],after_pf[:,1],after_pf[:,2],'y-+')
+
+    # Generator pose dictionary
+
 
 
 
