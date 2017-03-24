@@ -12,6 +12,9 @@
 #include <boost/asio.hpp>
 
 
+#include "OwnEdge/Z_zero_edge.h"
+
+
 int main()
 {
     std::default_random_engine e(0);

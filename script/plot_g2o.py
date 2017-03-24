@@ -32,7 +32,7 @@ if __name__ == '__main__':
                 markers_list.append(float(line.split(' ')[2]))
                 markers_list.append(float(line.split(' ')[3]))
                 markers_list.append(float(line.split(' ')[4]))
-                if (id-12) < 3:
+                if -1<(id-12) < 4:
                     tag_array[int(id-12),0] = float(line.split(' ')[2])
                     tag_array[int(id-12),1] = float(line.split(' ')[3])
                     tag_array[int(id-12),2] = float(line.split(' ')[4])

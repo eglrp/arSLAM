@@ -5,19 +5,32 @@ import matplotlib.pyplot as plt
 import math
 import SimpleKF
 import SimplePF
+# import numba
 
+# @jit
 def findRealPose(Data,time_pose):
 
     Pose = np.zeros([Data.shape[0],3])
+    time_stamp = np.zeros(Data.shape[0])
 
 
 
     for i in range(Data.shape[0]):
-        Pose[i,:] = np.mean(time_pose[np.argsort(np.abs(Data[i,0]-time_pose[:,0]))[:3],1:],0)
+        Pose[i,:] = (time_pose[np.argmin(np.abs(Data[i,0]-time_pose[:,0])),1:])
+        time_stamp[i] = time_pose[np.argmin(np.abs(Data[i,0]-time_pose[:,0])),0]
+        # tmp_centre = np.mean(time_pose[np.argmin(np.abs(Data[i,0]-time_pose[:,0])),1:],0)
+        # if np.linalg.norm(Pose[i,:]-tmp_centre) > 1.5:
+        #     Pose[i,:] = Pose[i-1,:]
         Pose[i,1] *= -1.0
-        Pose[i,0] += 1.0
+        # Pose[i,0] += 1.0
     tPose = np.zeros_like(Pose)
     tPose = np.copy(Pose)
+
+    plt.figure(123)
+    # plt.plot(time_stamp-Pose[:,0],'r-+')
+    plt.plot(time_stamp-Data[:,0],'y-.')
+    # plt.plot(time_stamp,'r-.')
+    # plt.plot(Data[:,0],'b-.')
 
     # kf = SimpleKF.KFSimple(Pose[0,:])
     # kf = SimplePF.PFSimple(Pose[0,:],100)
@@ -51,6 +64,8 @@ def findRealPose(Data,time_pose):
         #     plt.plot(Pose[i,0],Pose[i,1],'yD')
 
 
+    # left offset
+    Pose[:-18,:] = Pose[18:,:]
 
     return Pose
 
@@ -65,7 +80,7 @@ if __name__ == '__main__':
     plt.plot(time_pose[:,1],time_pose[:,2],'b-')
     plt.grid(True)
 
-    dir_name = "/home/steve/Data/locate/1"
+    dir_name = "/home/steve/Data/locate/5"
 
     # np.savetxt(dir_name+'UwbData.data',dc.UwbData)
 # np.savetxt(dir_name+'UwbData.data.csv',dc.UwbData,delimiter=',')
@@ -84,8 +99,10 @@ if __name__ == '__main__':
 
     plt.figure(1)
     plt.grid(True)
-    plt.plot(UwbRealPose[:,0],UwbRealPose[:,1],'r*-')
-    plt.plot(ImuRealPose[:,0],ImuRealPose[:,1],'b*-')
+    plt.plot(UwbRealPose[:,0],UwbRealPose[:,1],'r+-')
+    plt.figure(3)
+    plt.grid(True)
+    plt.plot(ImuRealPose[:,0],ImuRealPose[:,1],'b+-')
     plt.show()
 
 
