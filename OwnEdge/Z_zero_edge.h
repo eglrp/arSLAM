@@ -6,6 +6,7 @@
 #define ARSLAM_Z_ZERO_EDGE_H
 
 //#include "g2o_type_slam3d_addons_api.h"
+#include <g2o/core/base_binary_edge.h>
 #include "g2o/config.h"
 #include "g2o/core/base_vertex.h"
 #include "g2o/core/base_edge.h"
@@ -14,9 +15,9 @@
 
 
 
-class ZzeroEdge :public g2o::BaseEdge<1,g2o::VertexSE3>{
+class ZzeroEdge :public g2o::BaseBinaryEdge<1,double,g2o::VertexSE3,g2o::VertexSE3>{
 public:
-
+//   ZzeroEdge
 
 
 
