@@ -19,6 +19,8 @@ class ZzeroEdge :public g2o::BaseBinaryEdge<1,double,g2o::VertexSE3,g2o::VertexS
 public:
 //   ZzeroEdge
 
+// Load g2o file and add new tag .....
+
 
 
 };
