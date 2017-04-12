@@ -88,6 +88,7 @@ int main() {
     std::ofstream out_log("./log.txt");
     std::ofstream time_use_log("./time_use_log.txt");
     std::ofstream id2time_log("./id2timelog.txt");
+    
     id2time_log.precision(15);
 
     cv::namedWindow(win_name);
@@ -244,6 +245,7 @@ int main() {
         std::cout << "jpg name : " << the_jpg_name << std::endl;
 
         img = cv::imread(data_dir+the_jpg_name);
+        std::cout << "time of read image file :" << TimeStamp::now()-time_begin << std::endl;
 
         current_frame_id++;
 //        std::cout << current_frame_id << std::endl;
@@ -274,6 +276,8 @@ int main() {
                 img, corner, ids
         );
 
+        std::cout << "time after detect markers:"<<TimeStamp::now()-time_begin<<std::endl;
+
 
         /**
          * Detected markers in this frame.
@@ -290,6 +294,8 @@ int main() {
                                                  distortion_matrix_,
                                                  rvecs, tvecs);
 
+            std::cout << "time after compute tvec and rvecs:"<<TimeStamp::now()-time_begin<<std::endl;
+
             /**
              * Draw axis
              */
@@ -298,6 +304,8 @@ int main() {
                                     distortion_matrix_,
                                     rvecs[i], tvecs[i], real_length);
             }
+
+            std::cout << "time after draw axis:"<<TimeStamp::now()-time_begin<<std::endl;
 
             time_use_log << TimeStamp::now() - time_begin << " ";
             /**
