@@ -11,7 +11,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from array import array
 
 if __name__ == '__main__':
-    g2o_file = open("../Save1.g2o")
+    g2o_file = open("/home/steve/test.g2o")
 
     odo_list = array("d")
     odo_id = array("d")
@@ -50,37 +50,38 @@ if __name__ == '__main__':
     ax.plot(odo[:,0],odo[:,1],odo[:,2],'r-+')
     ax.plot(marker[:,0],marker[:,1],marker[:,2],'b*')
     ax.plot(tag_array[:,0],tag_array[:,1],tag_array[:,2],'D')
-    # ax.plot(after_pf[:,0],after_pf[:,1],after_pf[:,2],'y-+')
-
-    # Save Beaconset
-    tag_array[:,2] = 1.12
-    np.savetxt("beaconset",tag_array)
-
-
-    # Generator pose dictionary
-    time_log = open('../id2timelog.txt')
-
-    # time_pose = open('../time2pose.txt')
-    time_pose = np.zeros([odo.shape[0],4])
-
-    tp_index = 0
-
-    for line in time_log.readlines():
-        the_time = float(line.split(' ')[0])
-        the_id = float(line.split(' ')[1])
-
-        time_pose[tp_index,0] = the_time
-        time_pose[tp_index,1:] = odo[np.argmin(np.abs(odo_id-the_id)),:]
-
-        tp_index += 1
-
-    np.savetxt("time2pose.csv",time_pose,delimiter=',')
-
-
-    plt.figure(3)
-    # plt.plot(odo[:, 0], odo[:, 1], 'r*-')
-    plt.plot(marker[:, 0], marker[:, 1], 'b+')
-    plt.plot(tag_array[:,0],tag_array[:,1],'D')
-    # plt.plot(after_pf[:,0],after_pf[:,1],'y+-')
-    plt.grid(True)
     plt.show()
+    # ax.plot(after_pf[:,0],after_pf[:,1],after_pf[:,2],'y-+')
+    #
+    # # Save Beaconset
+    # tag_array[:,2] = 1.12
+    # np.savetxt("beaconset",tag_array)
+    #
+    #
+    # # Generator pose dictionary
+    # time_log = open('../id2timelog.txt')
+    #
+    # # time_pose = open('../time2pose.txt')
+    # time_pose = np.zeros([odo.shape[0],4])
+    #
+    # tp_index = 0
+    #
+    # for line in time_log.readlines():
+    #     the_time = float(line.split(' ')[0])
+    #     the_id = float(line.split(' ')[1])
+    #
+    #     time_pose[tp_index,0] = the_time
+    #     time_pose[tp_index,1:] = odo[np.argmin(np.abs(odo_id-the_id)),:]
+    #
+    #     tp_index += 1
+    #
+    # np.savetxt("time2pose.csv",time_pose,delimiter=',')
+    #
+    #
+    # plt.figure(3)
+    # # plt.plot(odo[:, 0], odo[:, 1], 'r*-')
+    # plt.plot(marker[:, 0], marker[:, 1], 'b+')
+    # plt.plot(tag_array[:,0],tag_array[:,1],'D')
+    # # plt.plot(after_pf[:,0],after_pf[:,1],'y+-')
+    # plt.grid(True)
+    # plt.show()
