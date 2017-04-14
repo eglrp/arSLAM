@@ -50,7 +50,8 @@ int main(int argc,char *argv[])
     for(int i(10);i<100;++i)
     {
         auto the_vertex = globalOptimizer.vertex(i);
-        if(the_vertex->id()==i)
+        std::cout << "Get vertex ok." << std::endl;
+        if(the_vertex>0)
         {
            //add new edge
             auto *v = new ZzeroEdge();
@@ -58,26 +59,25 @@ int main(int argc,char *argv[])
             v->vertices()[1]=the_vertex;
             Eigen::Matrix<double,1,1> info= Eigen::Matrix<double,1,1>::Identity();
             info(0,0) = 100;
-            v->setInformation(info);
+//            v->setInformation(info);
+//            std::cout << "after set information " << std::endl;
             v->setMeasurement(0.0);
+            std::cout << "after set Measurement" << std::endl;
             globalOptimizer.addEdge(v);
-
-
+            std::cout << "add to graph ok " << std::endl;
 
         }else{
-            break;
+            std::cout << "break" << std::endl;
+            continue;
         }
     }
-
-
-
-
-
-
+    
 
     globalOptimizer.initializeOptimization(0);
+    std::cout << "initial g2o ok" << std::endl;
 
     auto start_time = TimeStamp::now();
+    std::cout << "start optimize :" << start_time << std::endl;
     globalOptimizer.optimize(1000);
     std::cout << " Optimize time :" << TimeStamp::now()-start_time << std::endl;
     std::cout << "Optimizer ok:" << std::endl;
