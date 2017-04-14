@@ -56,7 +56,7 @@ int main(int argc,char *argv[])
            //add new edge
             auto *v = new ZzeroEdge();
             v->vertices()[0]=the_vertex;
-            v->vertices()[1]=the_vertex;
+            v->vertices()[1]=globalOptimizer.vertex(11);
             Eigen::Matrix<double,1,1> info= Eigen::Matrix<double,1,1>::Identity();
             info(0,0) = 100;
 //            v->setInformation(info);
@@ -71,7 +71,7 @@ int main(int argc,char *argv[])
             continue;
         }
     }
-    
+
 
     globalOptimizer.initializeOptimization(0);
     std::cout << "initial g2o ok" << std::endl;
@@ -81,6 +81,7 @@ int main(int argc,char *argv[])
     globalOptimizer.optimize(1000);
     std::cout << " Optimize time :" << TimeStamp::now()-start_time << std::endl;
     std::cout << "Optimizer ok:" << std::endl;
+    globalOptimizer.save("./test.g2o");
 
 
 }
