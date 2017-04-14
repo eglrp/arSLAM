@@ -60,7 +60,7 @@ int main(int argc,char *argv[])
             v->vertices()[0]=the_vertex;
             v->vertices()[1]=globalOptimizer.vertex(11);
             Eigen::Matrix<double,1,1> info= Eigen::Matrix<double,1,1>::Identity();
-            info(0,0) = 100;
+            info(0, 0) = 1000;
 //            v->setInformation(info);
 //            std::cout << "after set information " << std::endl;
             v->setMeasurement(0.0);
