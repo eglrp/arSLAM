@@ -45,14 +45,16 @@ int main(int argc,char *argv[])
             new g2o::OptimizationAlgorithmLevenberg(blockSolver);
     globalOptimizer.setAlgorithm(solver);
 
-    globalOptimizer.load("/home/steve/Data/save_graph_opt.g2o");
+    globalOptimizer.load("/home/steve/Data/save_graph.g2o");
 
     for(int i(10);i<100;++i)
     {
         auto the_vertex = globalOptimizer.vertex(i);
         std::cout << "Get vertex ok." << std::endl;
-        if(the_vertex>0)
-        {
+        if(the_vertex>0&&the_vertex->id()!=11)
+        {          double data[10]={100};
+            the_vertex->getEstimateData(data);
+            std::cout << "id :" << the_vertex->id() << " ";
            //add new edge
             auto *v = new ZzeroEdge();
             v->vertices()[0]=the_vertex;
@@ -78,10 +80,32 @@ int main(int argc,char *argv[])
 
     auto start_time = TimeStamp::now();
     std::cout << "start optimize :" << start_time << std::endl;
-    globalOptimizer.optimize(1000);
+    globalOptimizer.optimize(30);
     std::cout << " Optimize time :" << TimeStamp::now()-start_time << std::endl;
     std::cout << "Optimizer ok:" << std::endl;
-    globalOptimizer.save("./test.g2o");
+    for(int i(10);i<100;++i)
+    {
+        auto the_vertex = globalOptimizer.vertex(i);
+        std::cout << "Get vertex ok." << std::endl;
+        if(the_vertex>0)
+        {
+            //add new edge
+            double data[10]={100};
+            the_vertex->getEstimateData(data);
+            std::cout << "id :" << the_vertex->id() << " ";
+            for(int kk(0);kk<8;++kk)
+            {
+                std::cout << data[kk]<<" ";
+            }
+            std::cout << std::endl;
+
+
+        }else{
+            std::cout << "break" << std::endl;
+            continue;
+        }
+    }
+    globalOptimizer.save("/home/steve/test.g2o");
 
 
 }
