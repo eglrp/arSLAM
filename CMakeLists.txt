@@ -94,6 +94,9 @@ target_link_libraries(G2O_Solve ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS} ${
 add_executable(G2O_image_seq G2O_image_seq.cpp)
 target_link_libraries(G2O_image_seq ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
+add_executable(G2oPlus G2oPlus.cpp)
+target_link_libraries(G2oPlus ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS} ${PCL_LIBRARIES})
+
 
 add_executable(rnd_test random_test.cpp)
 target_link_libraries(rnd_test ${G2O_LIBS})

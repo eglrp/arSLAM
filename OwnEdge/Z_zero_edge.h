@@ -22,7 +22,6 @@ public:
 // Load g2o file and add new tag .....
 
 
-
 };
 
 
