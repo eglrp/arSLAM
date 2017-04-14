@@ -355,6 +355,7 @@ int main() {
                 information(3, 3) = information(4, 4) = information(5, 5) = 100;
                 edge->setInformation(information);
                 Eigen::Isometry3d T = rt2Matrix(rvecs[i_ids], tvecs[i_ids]);
+
                 edge->setMeasurement(T);
                 globalOptimizer.addEdge(edge);
             }

@@ -23,7 +23,10 @@
 #include "g2o/types/slam3d/types_slam3d.h"
 #include "g2o/types/slam3d_addons/types_slam3d_addons.h"
 
-G2O_USE_TYPE_GROUP(slam3d);
+#include "OwnEdge/Z_zero_edge.h"
+
+#include "OwnEdge/Z_zero_edge.cpp"
+//G2O_USE_TYPE_GROUP(slam3d);
 
 int main(int argc,char *argv[])
 {
@@ -50,6 +53,16 @@ int main(int argc,char *argv[])
         if(the_vertex->id()==i)
         {
            //add new edge
+            auto *v = new ZzeroEdge();
+            v->vertices()[0]=the_vertex;
+            v->vertices()[1]=the_vertex;
+            Eigen::Matrix<double,1,1> info= Eigen::Matrix<double,1,1>::Identity();
+            info(0,0) = 100;
+            v->setInformation(info);
+            v->setMeasurement(0.0);
+            globalOptimizer.addEdge(v);
+
+
 
         }else{
             break;
