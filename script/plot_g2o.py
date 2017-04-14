@@ -74,27 +74,7 @@ if __name__ == '__main__':
 
         tp_index += 1
 
-
     np.savetxt("time2pose.csv",time_pose,delimiter=',')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     plt.figure(3)
