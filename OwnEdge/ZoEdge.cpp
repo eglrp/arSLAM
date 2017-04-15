@@ -4,7 +4,8 @@
 
 #include "ZoEdge.h"
 
-Z0Edge::Z0Edge() : BaseBinaryEdge<1, double, g2o::VertexSE3, g2o::VertexSE3>()
+Z0Edge::Z0Edge() :
+        g2o::BaseBinaryEdge<1, double, g2o::VertexSE3, g2o::VertexSE3>()
 {
     information().setIdentity();
     _information(0,0) = 100.0;

@@ -23,12 +23,16 @@
 #include "g2o/types/slam3d/types_slam3d.h"
 #include "g2o/types/slam3d_addons/types_slam3d_addons.h"
 
+#include "g2o/core/robust_kernel.h"
+#include "g2o/core/robust_kernel_factory.h"
+
 #include "OwnEdge/ZoEdge.h"
 
 #include "OwnEdge/ZoEdge.cpp"
 
 
 #include "OwnEdge/DistanceEdge.h"
+#include "OwnEdge/DistanceEdge.cpp"
 
 G2O_USE_TYPE_GROUP(slam3d);
 
@@ -88,12 +92,14 @@ int main(int argc,char *argv[])
         auto next_vertex = globalOptimizer.vertex(i + 1);
         if (the_vertex > 0 && next_vertex > 0) {
             auto *e = new DistanceEdge();
+            static g2o::RobustKernel *rbk = g2o::RobustKernelFactory::instance()->construct("Cauchy");
             e->vertices()[0] = the_vertex;
             e->vertices()[1] = next_vertex;
             Eigen::Matrix<double, 1, 1> info = Eigen::Matrix<double, 1, 1>::Identity();
-            info(0, 0) = 5;
+            info(0, 0) = 2;
             e->setInformation(info);
-            e->setMeasurement(0.0);
+            e->setMeasurement(0.1);
+            e->setRobustKernel(rbk);
             globalOptimizer.addEdge(e);
         }
     }
