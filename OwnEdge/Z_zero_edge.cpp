@@ -27,7 +27,7 @@ bool ZzeroEdge::write(std::ostream &os) const {
 void ZzeroEdge::computeError() {
    g2o::VertexSE3 *from = static_cast<g2o::VertexSE3*>(_vertices[0]);
     g2o::VertexSE3 *to = static_cast<g2o::VertexSE3*>(_vertices[1]);
-    _error(0, 0) = (from->estimate().matrix()(2, 3) - to->estimate().matrix()(2, 3));
+    _error(0, 0) = (from->estimate().matrix()(2, 3) - _measurement);
 }
 
 bool ZzeroEdge::setMeasurementFromState() {

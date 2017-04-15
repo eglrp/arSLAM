@@ -28,7 +28,7 @@ public:
 
     virtual void setMeasurement(const double& m)
     {
-        _measurement = 0.0;
+        _measurement = m;
 //        _inverseMeasurement = 10000;
     }
 
