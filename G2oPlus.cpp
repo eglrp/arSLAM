@@ -93,6 +93,7 @@ int main(int argc,char *argv[])
         if (the_vertex > 0 && next_vertex > 0) {
             auto *e = new DistanceEdge();
             static g2o::RobustKernel *rbk = g2o::RobustKernelFactory::instance()->construct("Cauchy");
+//            rbk->setDelta()
             e->vertices()[0] = the_vertex;
             e->vertices()[1] = next_vertex;
             Eigen::Matrix<double, 1, 1> info = Eigen::Matrix<double, 1, 1>::Identity();
@@ -110,7 +111,7 @@ int main(int argc,char *argv[])
 
     auto start_time = TimeStamp::now();
     std::cout << "start optimize :" << start_time << std::endl;
-    globalOptimizer.optimize(30);
+    globalOptimizer.optimize(1000);
     std::cout << " Optimize time :" << TimeStamp::now()-start_time << std::endl;
     std::cout << "Optimizer ok:" << std::endl;
     for(int i(10);i<100;++i)
