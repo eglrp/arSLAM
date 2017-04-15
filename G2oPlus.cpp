@@ -53,7 +53,7 @@ int main(int argc,char *argv[])
             new g2o::OptimizationAlgorithmLevenberg(blockSolver);
     globalOptimizer.setAlgorithm(solver);
 
-    globalOptimizer.load("/home/steve/Data/save_graph.g2o");
+    globalOptimizer.load("/home/steve/Data/Save1.g2o");
 
     /**
      * add constraint z == 0.
@@ -96,7 +96,7 @@ int main(int argc,char *argv[])
             e->vertices()[0] = the_vertex;
             e->vertices()[1] = next_vertex;
             Eigen::Matrix<double, 1, 1> info = Eigen::Matrix<double, 1, 1>::Identity();
-            info(0, 0) = 2;
+            info(0, 0) = 5;
             e->setInformation(info);
             e->setMeasurement(0.1);
             e->setRobustKernel(rbk);
