@@ -23,10 +23,14 @@
 #include "g2o/types/slam3d/types_slam3d.h"
 #include "g2o/types/slam3d_addons/types_slam3d_addons.h"
 
-#include "OwnEdge/Z_zero_edge.h"
+#include "OwnEdge/ZoEdge.h"
 
-#include "OwnEdge/Z_zero_edge.cpp"
-//G2O_USE_TYPE_GROUP(slam3d);
+#include "OwnEdge/ZoEdge.cpp"
+
+
+#include "OwnEdge/DistanceEdge.h"
+
+G2O_USE_TYPE_GROUP(slam3d);
 
 int main(int argc,char *argv[])
 {
@@ -47,16 +51,17 @@ int main(int argc,char *argv[])
 
     globalOptimizer.load("/home/steve/Data/save_graph.g2o");
 
+    /**
+     * add constraint z == 0.
+     */
     for(int i(10);i<100;++i)
     {
         auto the_vertex = globalOptimizer.vertex(i);
         std::cout << "Get vertex ok." << std::endl;
-        if(the_vertex>0&&the_vertex->id()!=11)
-        {          double data[10]={100};
-            the_vertex->getEstimateData(data);
+        if(the_vertex>0&&the_vertex->id()!=11) {
             std::cout << "id :" << the_vertex->id() << " ";
            //add new edge
-            auto *v = new ZzeroEdge();
+            auto *v = new Z0Edge();
             v->vertices()[0]=the_vertex;
             v->vertices()[1]=globalOptimizer.vertex(11);
             Eigen::Matrix<double,1,1> info= Eigen::Matrix<double,1,1>::Identity();
@@ -64,13 +69,32 @@ int main(int argc,char *argv[])
 //            v->setInformation(info);
 //            std::cout << "after set information " << std::endl;
             v->setMeasurement(0.0);
-            std::cout << "after set Measurement" << std::endl;
+//            std::cout << "after set Measurement" << std::endl;
             globalOptimizer.addEdge(v);
-            std::cout << "add to graph ok " << std::endl;
+//            std::cout << "add to graph ok " << std::endl;
 
         }else{
-            std::cout << "break" << std::endl;
+//            std::cout << "break" << std::endl;
             continue;
+        }
+    }
+
+    /**
+     * Add constraint motion is continues.
+     */
+
+    for (int i(1001); i < 70000; ++i) {
+        auto the_vertex = globalOptimizer.vertex(i);
+        auto next_vertex = globalOptimizer.vertex(i + 1);
+        if (the_vertex > 0 && next_vertex > 0) {
+            auto *e = new DistanceEdge();
+            e->vertices()[0] = the_vertex;
+            e->vertices()[1] = next_vertex;
+            Eigen::Matrix<double, 1, 1> info = Eigen::Matrix<double, 1, 1>::Identity();
+            info(0, 0) = 5;
+            e->setInformation(info);
+            e->setMeasurement(0.0);
+            globalOptimizer.addEdge(e);
         }
     }
 
@@ -106,6 +130,5 @@ int main(int argc,char *argv[])
         }
     }
     globalOptimizer.save("/home/steve/test.g2o");
-
 
 }

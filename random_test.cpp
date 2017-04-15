@@ -12,7 +12,7 @@
 #include <boost/asio.hpp>
 
 
-#include "OwnEdge/Z_zero_edge.h"
+#include "OwnEdge/ZoEdge.h"
 
 
 int main()

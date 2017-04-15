@@ -14,12 +14,14 @@
 #include "g2o/types/slam3d_addons/types_slam3d_addons.h"
 
 
-G2O_USE_TYPE_GROUP(slam3d);
+//G2O_USE_TYPE_GROUP(slam3d);
 
-class ZzeroEdge :public g2o::BaseBinaryEdge<1,double,g2o::VertexSE3,g2o::VertexSE3>{
+class Z0Edge :
+        public g2o::BaseBinaryEdge<1, double, g2o::VertexSE3, g2o::VertexSE3> {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
-    ZzeroEdge();
+
+    Z0Edge();
 
     virtual bool read(std::istream & is);
     virtual bool write(std::ostream& os) const;
@@ -33,7 +35,7 @@ public:
     }
 
     virtual bool getMeasurementData(double *d)const{
-        *d = 0.0;
+        *d = _measurement;
         return true;
     }
 
