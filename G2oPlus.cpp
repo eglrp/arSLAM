@@ -53,7 +53,7 @@ int main(int argc,char *argv[])
             new g2o::OptimizationAlgorithmLevenberg(blockSolver);
     globalOptimizer.setAlgorithm(solver);
 
-    globalOptimizer.load("/home/steve/Data/Save1.g2o");
+    globalOptimizer.load("/home/steve/Data/save_graph_opt(1).g2o");
 
     /**
      * add constraint z == 0.
@@ -69,7 +69,7 @@ int main(int argc,char *argv[])
             v->vertices()[0]=the_vertex;
             v->vertices()[1]=globalOptimizer.vertex(11);
             Eigen::Matrix<double,1,1> info= Eigen::Matrix<double,1,1>::Identity();
-            info(0, 0) = 1000;
+            info(0, 0) = 100;
 //            v->setInformation(info);
 //            std::cout << "after set information " << std::endl;
             v->setMeasurement(0.0);
@@ -114,28 +114,28 @@ int main(int argc,char *argv[])
     globalOptimizer.optimize(1000);
     std::cout << " Optimize time :" << TimeStamp::now()-start_time << std::endl;
     std::cout << "Optimizer ok:" << std::endl;
-    for(int i(10);i<100;++i)
-    {
-        auto the_vertex = globalOptimizer.vertex(i);
-        std::cout << "Get vertex ok." << std::endl;
-        if(the_vertex>0)
-        {
-            //add new edge
-            double data[10]={100};
-            the_vertex->getEstimateData(data);
-            std::cout << "id :" << the_vertex->id() << " ";
-            for(int kk(0);kk<8;++kk)
-            {
-                std::cout << data[kk]<<" ";
-            }
-            std::cout << std::endl;
-
-
-        }else{
-            std::cout << "break" << std::endl;
-            continue;
-        }
-    }
+//    for(int i(10);i<100;++i)
+//    {
+//        auto the_vertex = globalOptimizer.vertex(i);
+//        std::cout << "Get vertex ok." << std::endl;
+//        if(the_vertex>0)
+//        {
+//            //add new edge
+//            double data[10]={100};
+//            the_vertex->getEstimateData(data);
+//            std::cout << "id :" << the_vertex->id() << " ";
+//            for(int kk(0);kk<8;++kk)
+//            {
+//                std::cout << data[kk]<<" ";
+//            }
+//            std::cout << std::endl;
+//
+//
+//        }else{
+//            std::cout << "break" << std::endl;
+//            continue;
+//        }
+//    }
     globalOptimizer.save("/home/steve/test.g2o");
 
 }

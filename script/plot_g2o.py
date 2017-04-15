@@ -50,10 +50,10 @@ if __name__ == '__main__':
     ax.plot(odo[:,0],odo[:,1],odo[:,2],'r-+')
     ax.plot(marker[:,0],marker[:,1],marker[:,2],'b*')
     ax.plot(tag_array[:,0],tag_array[:,1],tag_array[:,2],'D')
-    plt.show()
+    # plt.show()
     # ax.plot(after_pf[:,0],after_pf[:,1],after_pf[:,2],'y-+')
     #
-    # # Save Beaconset
+    # Save Beaconset
     # tag_array[:,2] = 1.12
     # np.savetxt("beaconset",tag_array)
     #
@@ -78,10 +78,11 @@ if __name__ == '__main__':
     # np.savetxt("time2pose.csv",time_pose,delimiter=',')
     #
     #
-    # plt.figure(3)
-    # # plt.plot(odo[:, 0], odo[:, 1], 'r*-')
-    # plt.plot(marker[:, 0], marker[:, 1], 'b+')
-    # plt.plot(tag_array[:,0],tag_array[:,1],'D')
-    # # plt.plot(after_pf[:,0],after_pf[:,1],'y+-')
-    # plt.grid(True)
-    # plt.show()
+    plt.figure()
+    plt.title("2d plot")
+    plt.plot(odo[:, 0], odo[:, 1], 'r*-')
+    plt.plot(marker[:, 0], marker[:, 1], 'b+')
+    plt.plot(tag_array[:, 0], tag_array[:, 1], 'D')
+    # plt.plot(after_pf[:,0],after_pf[:,1],'y+-')
+    plt.grid(True)
+    plt.show()
