@@ -101,7 +101,7 @@ int main(int argc,char *argv[])
             e->setInformation(info);
             e->setMeasurement(0.1);
             e->setRobustKernel(rbk);
-            globalOptimizer.addEdge(e);
+//            globalOptimizer.addEdge(e);
         }
     }
 

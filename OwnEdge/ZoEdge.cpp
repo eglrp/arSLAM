@@ -34,6 +34,7 @@ void Z0Edge::computeError() {
 bool Z0Edge::setMeasurementFromState() {
     setMeasurement(0);
     return true;
+   
 }
 
 void Z0Edge::linearizeOplus() {
