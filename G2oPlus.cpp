@@ -97,7 +97,7 @@ int main(int argc,char *argv[])
             e->vertices()[0] = the_vertex;
             e->vertices()[1] = next_vertex;
             Eigen::Matrix<double, 1, 1> info = Eigen::Matrix<double, 1, 1>::Identity();
-            info(0, 0) = 5;
+            info(0, 0) = 2.0;
             e->setInformation(info);
             e->setMeasurement(0.1);
             e->setRobustKernel(rbk);
