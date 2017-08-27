@@ -98,7 +98,7 @@ int main() {
     int current_frame_id(1000);
     int plane_id(100);
 
-    std::map<int,std::vector<g2o::EdgeSE3*>> edgen_vec_map;
+    std::map<int, std::vector<g2o::EdgeSE3 *>> edgen_vec_map;
 
 
     /**
@@ -106,9 +106,9 @@ int main() {
      */
 
     TmpSimpleFilter tpf(1,
-                        Eigen::Vector3d(0,0,0),
-                        Eigen::Vector3d(0.05,0.05,0.05),
-                        Eigen::Vector3d(3.41,3.41,2.41),
+                        Eigen::Vector3d(0, 0, 0),
+                        Eigen::Vector3d(0.05, 0.05, 0.05),
+                        Eigen::Vector3d(3.41, 3.41, 2.41),
                         5000);
 
     bool tpf_need_initial(true);
@@ -125,10 +125,10 @@ int main() {
      */
 
     double real_length(0.199);
-    std::vector<cv::Vec3d> rvecs, tvecs;
+    std::vector <cv::Vec3d> rvecs, tvecs;
     std::vector<int> ids;
-    std::vector<std::vector<cv::Point2f>> corner;
-    cv::Ptr<cv::aruco::Dictionary> dic_ptr = new cv::aruco::Dictionary(
+    std::vector <std::vector<cv::Point2f>> corner;
+    cv::Ptr <cv::aruco::Dictionary> dic_ptr = new cv::aruco::Dictionary(
             cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_100));
 
 
@@ -187,7 +187,7 @@ int main() {
     globalOptimizer.addVertex(p);
 
     typedef g2o::BlockSolver_6_3 SlamBlockSolver;
-    typedef g2o::LinearSolverCSparse<SlamBlockSolver::PoseMatrixType> SlamLinearSolver;
+    typedef g2o::LinearSolverCSparse <SlamBlockSolver::PoseMatrixType> SlamLinearSolver;
 
     // 初始化求解器
     SlamLinearSolver *linearSolver = new SlamLinearSolver();
@@ -356,37 +356,33 @@ int main() {
             std::cout << " time use before first time optimize :" << TimeStamp::now() - time_begin << std::endl;
             globalOptimizer.optimize(10);
 
-            if(tpf_need_initial)
-            {
+            if (tpf_need_initial) {
                 globalOptimizer.optimize(200);
             }
 
 
-
-            double * test_output = new double[10];
+            double *test_output = new double[10];
             globalOptimizer.vertex(current_frame_id)->getEstimateData(test_output);
-            for(int i(0);i<10;++i)
-            {
+            for (int i(0); i < 10; ++i) {
                 std::cout << test_output[i];
             }
             std::cout << std::endl;
             std::cout << " time use before pf :" << TimeStamp::now() - time_begin << std::endl;
             time_use_log << TimeStamp::now() - time_begin << " ";
-            if(tpf_need_initial)
-            {
+            if (tpf_need_initial) {
 
                 tpf.InitialState(Eigen::Vector3d(test_output[0],
-                test_output[1],
-                test_output[2]),
-                current_frame_id);
+                                                 test_output[1],
+                                                 test_output[2]),
+                                 current_frame_id);
                 tpf_need_initial = false;
-            }else{
+            } else {
                 tpf.StateTransmission(current_frame_id);
-                std::vector<Eigen::Vector3d> guess_vec;
-                guess_vec.push_back(Eigen::Vector3d(test_output[0],test_output[1],test_output[2]));
+                std::vector <Eigen::Vector3d> guess_vec;
+                guess_vec.push_back(Eigen::Vector3d(test_output[0], test_output[1], test_output[2]));
                 tpf.Evaluation(guess_vec);
                 auto after_pf = tpf.GetResult();
-                tpf.Resample(1,1);
+                tpf.Resample(1, 1);
                 std::cout << after_pf.transpose() << std::endl;
                 out_log << after_pf.transpose() << std::endl;
             }
