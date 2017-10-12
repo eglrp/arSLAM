@@ -239,9 +239,9 @@ int main() {
         name_file >> the_jpg_name;
         double the_jpg_time(0.0);
         int ta, tb;
-        ta = the_jpg_name.find("_log");
-        tb = the_jpg_name.find(".jpg");
-        the_jpg_time = atof(the_jpg_name.substr(ta + 4, tb - ta - 4).c_str());
+//        ta = the_jpg_name.find("_log");
+//        tb = the_jpg_name.find(".jpg");
+//        the_jpg_time = atof(the_jpg_name.substr(ta + 4, tb - ta - 4).c_str());
         std::cout << "jpg name : " << the_jpg_name << std::endl;
 
         img = cv::imread(data_dir + the_jpg_name);
@@ -294,6 +294,7 @@ int main() {
                                                  intrinsic_matrix_,
                                                  distortion_matrix_,
                                                  rvecs, tvecs);
+            std::cout << " rvecs :" << rvecs.size() << " tvecs:" << tvecs.size() << std::endl;
 
             std::cout << "time after compute tvec and rvecs:" << TimeStamp::now() - time_begin << std::endl;
 
@@ -301,12 +302,13 @@ int main() {
              * Draw axis
              */
             for (int i(0); i < rvecs.size(); ++i) {
+//                cv::cvtColor(img,img,cv::COLOR_GRAY2BGR);
                 cv::aruco::drawAxis(img, intrinsic_matrix_,
                                     distortion_matrix_,
                                     rvecs[i], tvecs[i], real_length);
             }
 
-            std::cout << "time after draw axis:" << TimeStamp::now() - time_begin << std::endl;
+//            std::cout << "time after draw axis:" << TimeStamp::now() - time_begin << std::endl;
 
             time_use_log << TimeStamp::now() - time_begin << " ";
             /**
@@ -356,12 +358,14 @@ int main() {
                 information(3, 3) = information(4, 4) = information(5, 5) = 100;
                 edge->setInformation(information);
                 Eigen::Isometry3d T = rt2Matrix(rvecs[i_ids], tvecs[i_ids]);
+                std::cout << " T: " << T.matrix() << std::endl;
+                std::cout << "rvec :" << rvecs[i_ids] << " tvec: " << tvecs[i_ids] << std::endl;
 
                 edge->setMeasurement(T);
                 globalOptimizer.addEdge(edge);
 
             }
-            globalOptimizer.save((data_dir + "./save_graph.g2o").c_str());
+//            globalOptimizer.save((data_dir + "./save_graph.g2o").c_str());
 //            if(current_frame_id-1000 > 30)
 //            {
 ////                globalOptimizer.vertex(current_frame_id-20)->setFixed(true);
@@ -389,7 +393,7 @@ int main() {
 
             //globalOptimizer.initializeOptimization(0);
             time_use_log << TimeStamp::now() - time_begin << " ";
-            std::cout << " time use before first time optimize :" << TimeStamp::now() - time_begin << std::endl;
+//            std::cout << " time use before first time optimize :" << TimeStamp::now() - time_begin << std::endl;
 //            globalOptimizer.optimize(10);
 
             if (tpf_need_initial) {
@@ -403,7 +407,7 @@ int main() {
                 std::cout << test_output[i];
             }
             std::cout << std::endl;
-            std::cout << " time use before pf :" << TimeStamp::now() - time_begin << std::endl;
+//            std::cout << " time use before pf :" << TimeStamp::now() - time_begin << std::endl;
             time_use_log << TimeStamp::now() - time_begin << " ";
 //            if(tpf_need_initial)
 //            {
