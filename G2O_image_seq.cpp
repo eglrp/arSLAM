@@ -163,9 +163,9 @@ int main() {
         fp = (float *) tp;
         for (int i(0); i < 3; ++i) {
             for (int j(0); j < 3; ++j) {
-                cf >> t_str;
+                cf >> t;
                 if(cf.eof()) std::cout << "cf is eof()" << std::endl;
-                std::cout << "cf t :" <<  t_str << std::endl;
+                std::cout << "cf t :" <<  t << std::endl;
                 fp[i * 3 + j] = t;
             }
         }
