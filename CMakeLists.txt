@@ -19,6 +19,13 @@ if (OPENMP_FOUND)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif ()
 
+# MYNT EYE
+if (DEFINED ENV{MYNTEYE_SDK_ROOT})
+    set(MYNTEYE_SDK_DIR $ENV{MYNTEYE_SDK_ROOT})
+endif ()
+set(MYNT_SDK_LIB_DIR ${MYNTEYE_SDK_DIR}/lib)
+include_directories(${MYNTEYE_SDK_DIR}/include)
+
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 # G2O
 SET(G2O_ROOT /usr/local/include/g2o)
@@ -74,7 +81,7 @@ SET(G2O_LIBS g2o_cli g2o_ext_freeglut_minimal g2o_simulator
 
 
 add_executable(main main.cpp)
-target_link_libraries(main ${OpenCV_LIBS} ${PCL_LIBRARIES})
+target_link_libraries(main ${OpenCV_LIBS} ${PCL_LIBRARIES} ${MYNT_SDK_LIB_DIR}/libmynteye_core.so)
 
 
 add_executable(ArPoseTest ArPoseTest.cpp OwnEdge/ZoEdge.cpp OwnEdge/ZoEdge.h random_test.cpp)
@@ -102,4 +109,6 @@ target_link_libraries(G2oPlus ${G2O_LIBS} ${CSPARSE_LIBRARY} ${OpenCV_LIBS} ${PC
 add_executable(rnd_test random_test.cpp)
 target_link_libraries(rnd_test ${G2O_LIBS})
 #target
+
+
 

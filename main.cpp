@@ -16,6 +16,13 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+
+
+#include "camera.h"
+#include "utility.h"
+
+
+
 Eigen::Quaterniond angle2Quan(double x,double y,double z)
 {
     double qx,qy,qz,qw;
@@ -37,19 +44,31 @@ int main() {
     std::cout << "Hello, World!" << std::endl;
 
 
-    cv::VideoCapture cap("/dev/video0");
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
-    cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
-    cap.set(CV_CAP_OPENNI_QVGA_60HZ, 60.0);
+    /**
+     * normal camera
+     */
+//    cv::VideoCapture cap("/dev/video0");
+//    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+//    cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
+//    cap.set(CV_CAP_OPENNI_QVGA_60HZ, 60.0);
+
+    /**
+     * mynt_eye
+     */
+
+    mynteye::Camera cam;
+    mynteye::InitParameters parameters("/dev/video0");
+    cam.Open(parameters);
+
 
     cv::Mat in_img;
     cv::Mat *out_img_ptr;
     std::string win_name("debug");
     std::string threed_name("3ddebug");
 
-    cv::namedWindow(const_cast<char *>(threed_name.c_str()));
+//    cv::namedWindow(const_cast<char *>(threed_name.c_str()));
 
-    cv::namedWindow(const_cast<char *> (win_name.c_str()));
+//    cv::namedWindow(const_cast<char *> (win_name.c_str()));
 
     cv::waitKey(10);
 
@@ -83,7 +102,7 @@ int main() {
     ddi = (float *) di;
 
 
-    std::fstream tfs("./data/distortion_matrix.txt");
+    std::fstream tfs("./data/distortion_matrix_mynt.txt");
     for (int k(0); k < 5; ++k) {
         double ttt;
         tfs >> ttt;
@@ -97,7 +116,7 @@ int main() {
 
 //
     std::fstream ifs;
-    ifs.open("./data/intrinsic_matrix.txt");
+    ifs.open("./data/intrinsic_matrix_mynt.txt");
     std::cout << "isf:" << ifs.is_open() << std::endl;
     for (int ii(0); ii < 3; ++ii) {
         for (int jj(0); jj < 3; ++jj) {
@@ -121,15 +140,31 @@ int main() {
 //    cap.set(CV_)
 
 
+    if(cam.IsOpened())
+    {
+        std::cout << "true" << std::endl;
+    }else{
+        std::cout << "false" << std::endl;
+    }
 
 
-    while (cap.isOpened()) {
+    while (cam.IsOpened()) {
 
-        cap >> in_img;
+//        c >> in_img;
+        cam.Grab();
+        if(cam.RetrieveImage(in_img,mynteye::View::VIEW_LEFT_UNRECTIFIED)!=mynteye::ErrorCode::SUCCESS)
+        {
+            std::cout << "fail of RetrieveImage" << std::endl;
+            cvWaitKey(10);
+            continue;
+        }else{
+            std::cout << "success of RetrieveImage" << std::endl;
+        }
+
 
 //        vr << in_img;
 
-//        std::cout << "rows:"<<in_img.rows<<"  cols: "<<in_img.cols  << std::endl;
+        std::cout << "rows:"<<in_img.rows<<"  cols: "<<in_img.cols  << std::endl;
         out_img_ptr = &in_img;
         std::vector<std::vector<cv::Point2f>> corner;
         std::vector<int> ids;
@@ -163,7 +198,7 @@ int main() {
 //                        std::cout << "FIND 10" << std::endl;
                     }
                 }
-//                printf("i10:%d,i11:%d",i10,i11);
+                printf("i10:%d,i11:%d",i10,i11);
                 if ((i11 >= 0) && (i10 >= 0)  ) {
                     std::cout << "in" << std::endl;
 
@@ -266,7 +301,7 @@ int main() {
 
             }
 
-//            std::cout << 1.2 << std::endl;
+            std::cout << 1.2 << std::endl;
 
 
 //            cv::aruco::drawAxis(in_img, intrinsic_matrix, distortion_matrix,)

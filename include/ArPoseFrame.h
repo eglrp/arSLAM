@@ -472,7 +472,7 @@ void ArPoseFrame::BuildTransform() {
         /**
          * initial pf if
          */
-        if(need_initial && pose.norm() > 0.5 && !isnan(pose.sum()))
+        if(need_initial && pose.norm() > 0.5 && !std::isnan(pose.sum()))
         {
             tpf.InitialState(current_pos_);
 
@@ -480,7 +480,7 @@ void ArPoseFrame::BuildTransform() {
         }
         Eigen::Vector3d pf_pose;
 
-        if(!need_initial && pose.norm()>0.5&&!isnan(pose.sum()))
+        if(!need_initial && pose.norm()>0.5&&!std::isnan(pose.sum()))
         {
             std::vector<Eigen::Vector3d> tmp_pose_list;
             tmp_pose_list.push_back(pose);
