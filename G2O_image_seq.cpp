@@ -126,7 +126,7 @@ int main() {
     /**
      * Open video
      */
-    cv::VideoCapture cap(video_file_name);
+//    cv::VideoCapture cap(video_file_name);
 
     /**
      * Load Aruco parameter
@@ -251,11 +251,13 @@ int main() {
 //        std::cout << current_frame_id << std::endl;
 
         if (img.empty()) {
+            std::cout << "img.empty()" << std::endl;
             break;
         }
 
         if(name_file.eof())
         {
+            std::cout << "name_file.eof()" << std::endl;
             break;
         }
 
