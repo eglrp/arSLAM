@@ -41,7 +41,6 @@ Eigen::Quaterniond angle2Quan(double x,double y,double z)
 
 int main() {
     std::cout.precision(20);
-    std::cout << "Hello, World!" << std::endl;
 
 
     /**
@@ -66,11 +65,11 @@ int main() {
     std::string win_name("debug");
     std::string threed_name("3ddebug");
 
-//    cv::namedWindow(const_cast<char *>(threed_name.c_str()));
+    cv::namedWindow(const_cast<char *>(threed_name.c_str()));
+//
+    cv::namedWindow(const_cast<char *> (win_name.c_str()));
 
-//    cv::namedWindow(const_cast<char *> (win_name.c_str()));
-
-    cv::waitKey(10);
+//    cv::waitKey(10);
 
 //    viz::Viz
 
