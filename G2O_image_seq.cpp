@@ -98,7 +98,7 @@ int main() {
     std::vector<int> added_id;
     added_id.push_back(initial_marker_id);
 
-    int current_frame_id(1000);
+    int current_frame_id(100000);
     int plane_id(100);
 
     std::map<int, std::vector<g2o::EdgeSE3 *>> edgen_vec_map;
