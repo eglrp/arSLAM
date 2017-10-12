@@ -290,6 +290,7 @@ int main() {
 //                        std::cout << rvecs[i] << "   " << tvecs[i] << std::endl;
 
 
+                    cv::cvtColor(*out_img_ptr,*out_img_ptr,cv::COLOR_GRAY2BGR);
                     cv::aruco::drawAxis(*out_img_ptr, intrinsic_matrix, distortion_matrix,
                                         rvecs[i], tvecs[i], 0.300);
 
