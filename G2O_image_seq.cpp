@@ -163,8 +163,9 @@ int main() {
         fp = (float *) tp;
         for (int i(0); i < 3; ++i) {
             for (int j(0); j < 3; ++j) {
+                assert(!cf.eof());
                 cf >> t;
-                if(cf.eof()) std::cout << "cf is eof()" << std::endl;
+//                if(cf.eof()) std::cout << "cf is eof()" << std::endl;
                 std::cout << "cf t :" <<  t << std::endl;
                 fp[i * 3 + j] = t;
             }
@@ -174,6 +175,7 @@ int main() {
         tp = distortion_matrix_.data;
         fp = (float *) tp;
         for (int i(0); i < 5; ++i) {
+            assert(!df.eof());
             df >> t;
             std::cout << "df t : " << t << std::endl;
             fp[i] = t;
