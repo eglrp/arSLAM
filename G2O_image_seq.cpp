@@ -88,7 +88,7 @@ int main() {
     std::ofstream out_log("./log.txt");
     std::ofstream time_use_log("./time_use_log.txt");
     std::ofstream id2time_log("./id2timelog.txt");
-    
+
     id2time_log.precision(15);
 
     cv::namedWindow(win_name);
@@ -101,10 +101,10 @@ int main() {
     int current_frame_id(1000);
     int plane_id(100);
 
-    std::map<int,std::vector<g2o::EdgeSE3*>> edgen_vec_map;
+    std::map<int, std::vector<g2o::EdgeSE3 *>> edgen_vec_map;
 
     std::string data_dir("/home/steve/Data/mynt_data/05/image_0/");
-    std::ifstream name_file(data_dir+"file_name.txt");
+    std::ifstream name_file(data_dir + "file_name.txt");
 
 
 
@@ -114,9 +114,9 @@ int main() {
      */
 
     TmpSimpleFilter tpf(1,
-                        Eigen::Vector3d(0,0,0),
-                        Eigen::Vector3d(0.05,0.05,0.05),
-                        Eigen::Vector3d(3.41,3.41,2.41),
+                        Eigen::Vector3d(0, 0, 0),
+                        Eigen::Vector3d(0.05, 0.05, 0.05),
+                        Eigen::Vector3d(3.41, 3.41, 2.41),
                         5000);
 
     bool tpf_need_initial(true);
@@ -238,14 +238,14 @@ int main() {
         std::string the_jpg_name;
         name_file >> the_jpg_name;
         double the_jpg_time(0.0);
-        int ta,tb;
+        int ta, tb;
         ta = the_jpg_name.find("_log");
         tb = the_jpg_name.find(".jpg");
-        the_jpg_time = atof(the_jpg_name.substr(ta+4,tb-ta-4).c_str());
+        the_jpg_time = atof(the_jpg_name.substr(ta + 4, tb - ta - 4).c_str());
         std::cout << "jpg name : " << the_jpg_name << std::endl;
 
-        img = cv::imread(data_dir+the_jpg_name);
-        std::cout << "time of read image file :" << TimeStamp::now()-time_begin << std::endl;
+        img = cv::imread(data_dir + the_jpg_name);
+        std::cout << "time of read image file :" << TimeStamp::now() - time_begin << std::endl;
 
         current_frame_id++;
 //        std::cout << current_frame_id << std::endl;
@@ -255,8 +255,7 @@ int main() {
             break;
         }
 
-        if(name_file.eof())
-        {
+        if (name_file.eof()) {
             std::cout << "name_file.eof()" << std::endl;
             break;
         }
@@ -278,7 +277,7 @@ int main() {
                 img, corner, ids
         );
 
-        std::cout << "time after detect markers:"<<TimeStamp::now()-time_begin<<std::endl;
+        std::cout << "time after detect markers:" << TimeStamp::now() - time_begin << std::endl;
 
 
         /**
@@ -296,7 +295,7 @@ int main() {
                                                  distortion_matrix_,
                                                  rvecs, tvecs);
 
-            std::cout << "time after compute tvec and rvecs:"<<TimeStamp::now()-time_begin<<std::endl;
+            std::cout << "time after compute tvec and rvecs:" << TimeStamp::now() - time_begin << std::endl;
 
             /**
              * Draw axis
@@ -307,7 +306,7 @@ int main() {
                                     rvecs[i], tvecs[i], real_length);
             }
 
-            std::cout << "time after draw axis:"<<TimeStamp::now()-time_begin<<std::endl;
+            std::cout << "time after draw axis:" << TimeStamp::now() - time_begin << std::endl;
 
             time_use_log << TimeStamp::now() - time_begin << " ";
             /**
@@ -341,7 +340,7 @@ int main() {
             v->setId(current_frame_id);
             v->setEstimate(Eigen::Isometry3d::Identity());
             globalOptimizer.addVertex(v);
-            id2time_log << the_jpg_time <<" " << current_frame_id << std::endl;
+            id2time_log << the_jpg_time << " " << current_frame_id << std::endl;
 
             /**
              * Add edge
@@ -362,7 +361,7 @@ int main() {
                 globalOptimizer.addEdge(edge);
 
             }
-            globalOptimizer.save((data_dir+"./save_graph.g2o").c_str());
+            globalOptimizer.save((data_dir + "./save_graph.g2o").c_str());
 //            if(current_frame_id-1000 > 30)
 //            {
 ////                globalOptimizer.vertex(current_frame_id-20)->setFixed(true);
@@ -393,17 +392,14 @@ int main() {
             std::cout << " time use before first time optimize :" << TimeStamp::now() - time_begin << std::endl;
 //            globalOptimizer.optimize(10);
 
-            if(tpf_need_initial)
-            {
+            if (tpf_need_initial) {
 //                globalOptimizer.optimize(200);
             }
 
 
-
-            double * test_output = new double[10];
+            double *test_output = new double[10];
             globalOptimizer.vertex(current_frame_id)->getEstimateData(test_output);
-            for(int i(0);i<10;++i)
-            {
+            for (int i(0); i < 10; ++i) {
                 std::cout << test_output[i];
             }
             std::cout << std::endl;
@@ -447,7 +443,7 @@ int main() {
     /**
      * Save g2o to file
      */
-    globalOptimizer.save( (data_dir+"./save_graph.g2o").c_str());
+    globalOptimizer.save((data_dir + "./save_graph.g2o").c_str());
     return 0;
 
 }
