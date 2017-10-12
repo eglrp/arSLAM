@@ -360,8 +360,9 @@ int main() {
 
                 edge->setMeasurement(T);
                 globalOptimizer.addEdge(edge);
-            }
 
+            }
+            globalOptimizer.save((data_dir+"./save_graph.g2o").c_str());
 //            if(current_frame_id-1000 > 30)
 //            {
 ////                globalOptimizer.vertex(current_frame_id-20)->setFixed(true);
