@@ -5,10 +5,9 @@
 #include "ZoEdge.h"
 
 Z0Edge::Z0Edge() :
-        g2o::BaseBinaryEdge<1, double, g2o::VertexSE3, g2o::VertexSE3>()
-{
+        g2o::BaseBinaryEdge<1, double, g2o::VertexSE3, g2o::VertexSE3>() {
     information().setIdentity();
-    _information(0,0) = 100.0;
+    _information(0, 0) = 100.0;
 }
 
 bool Z0Edge::read(std::istream &is) {
@@ -26,8 +25,8 @@ bool Z0Edge::write(std::ostream &os) const {
 
 
 void Z0Edge::computeError() {
-   g2o::VertexSE3 *from = static_cast<g2o::VertexSE3*>(_vertices[0]);
-    g2o::VertexSE3 *to = static_cast<g2o::VertexSE3*>(_vertices[1]);
+    g2o::VertexSE3 *from = static_cast<g2o::VertexSE3 *>(_vertices[0]);
+    g2o::VertexSE3 *to = static_cast<g2o::VertexSE3 *>(_vertices[1]);
     _error(0, 0) = pow((from->estimate().matrix()(2, 3) - _measurement), 2.0)
                    + pow((to->estimate().matrix()(2, 3) - _measurement), 2.0);
 }

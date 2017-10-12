@@ -17,7 +17,7 @@ if __name__ == '__main__':
     odo_id = array("d")
     markers_list = array("d")
 
-    tag_array = np.zeros([4,3])
+    tag_array = np.zeros([4, 3])
 
     for line in g2o_file:
         if 'VERTEX_SE3' in line:
@@ -32,24 +32,22 @@ if __name__ == '__main__':
                 markers_list.append(float(line.split(' ')[2]))
                 markers_list.append(float(line.split(' ')[3]))
                 markers_list.append(float(line.split(' ')[4]))
-                if -1<(id-12) < 4:
-                    tag_array[int(id-12),0] = float(line.split(' ')[2])
-                    tag_array[int(id-12),1] = float(line.split(' ')[3])
-                    tag_array[int(id-12),2] = float(line.split(' ')[4])
-
+                if -1 < (id - 12) < 4:
+                    tag_array[int(id - 12), 0] = float(line.split(' ')[2])
+                    tag_array[int(id - 12), 1] = float(line.split(' ')[3])
+                    tag_array[int(id - 12), 2] = float(line.split(' ')[4])
 
     odo = np.frombuffer(odo_list, dtype=np.float).reshape(-1, 3)
-    odo_id = np.frombuffer(odo_id,dtype=np.float).reshape(-1)
+    odo_id = np.frombuffer(odo_id, dtype=np.float).reshape(-1)
     marker = np.frombuffer(markers_list, dtype=np.float).reshape(-1, 3)
-
 
     # after_pf = np.loadtxt("../log.txt")
 
     fig = plt.figure()
-    ax = fig.add_subplot(111,projection='3d')
-    ax.plot(odo[:,0],odo[:,1],odo[:,2],'r-+')
-    ax.plot(marker[:,0],marker[:,1],marker[:,2],'b*')
-    ax.plot(tag_array[:,0],tag_array[:,1],tag_array[:,2],'D')
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot(odo[:, 0], odo[:, 1], odo[:, 2], 'r-+')
+    ax.plot(marker[:, 0], marker[:, 1], marker[:, 2], 'b*')
+    ax.plot(tag_array[:, 0], tag_array[:, 1], tag_array[:, 2], 'D')
     # plt.show()
     # ax.plot(after_pf[:,0],after_pf[:,1],after_pf[:,2],'y-+')
     #
