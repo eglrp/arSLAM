@@ -82,8 +82,8 @@ int main() {
     std::string video_file_name("./locate_dataset_hd/log_test2.mp4");
     std::string win_name("ShowTest");
 
-    std::string intrinsic_matrix_file("./data/intrinsic_matrix.txt");
-    std::string distortion_matrix_file("./data/distortion_matrix.txt");
+    std::string intrinsic_matrix_file("./data/intrinsic_matrix_mynt.txt");
+    std::string distortion_matrix_file("./data/distortion_matrix_mynt.txt");
 
     std::ofstream out_log("./log.txt");
     std::ofstream time_use_log("./time_use_log.txt");
@@ -103,7 +103,7 @@ int main() {
 
     std::map<int,std::vector<g2o::EdgeSE3*>> edgen_vec_map;
 
-    std::string data_dir("/home/steve/Data/cvdata/");
+    std::string data_dir("/home/steve/Data/mynt_data/05/image_0/");
     std::ifstream name_file(data_dir+"file_name.txt");
 
 

@@ -157,13 +157,13 @@ int main() {
             cvWaitKey(10);
             continue;
         }else{
-            std::cout << "success of RetrieveImage" << std::endl;
+//            std::cout << "success of RetrieveImage" << std::endl;
         }
 
 
 //        vr << in_img;
 
-        std::cout << "rows:"<<in_img.rows<<"  cols: "<<in_img.cols  << std::endl;
+//        std::cout << "rows:"<<in_img.rows<<"  cols: "<<in_img.cols  << std::endl;
         out_img_ptr = &in_img;
         std::vector<std::vector<cv::Point2f>> corner;
         std::vector<int> ids;
